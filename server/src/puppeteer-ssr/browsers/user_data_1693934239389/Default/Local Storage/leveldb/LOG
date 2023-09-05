@@ -1,0 +1,5 @@
+2023/09/06-00:17:19.827 a903 Creating DB /Users/nguyenminhtruong/Documents/development/webpack-project-react-seo/server/src/puppeteer-ssr/browsers/user_data_1693934239389/Default/Local Storage/leveldb since it was missing.
+2023/09/06-00:17:19.903 a903 Reusing MANIFEST /Users/nguyenminhtruong/Documents/development/webpack-project-react-seo/server/src/puppeteer-ssr/browsers/user_data_1693934239389/Default/Local Storage/leveldb/MANIFEST-000001
+2023/09/06-00:19:14.627 8403 Level-0 table #5: started
+2023/09/06-00:19:14.650 8403 Level-0 table #5: 126628 bytes OK
+2023/09/06-00:19:14.709 8403 Delete type=0 #3
