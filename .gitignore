@@ -8,6 +8,7 @@ config/env/.env
 config/env/env.json
 config/utils/PortHandler/.env
 *.DS_Store
+server/**/server-info.json
 server/**/user_data*
 server/**/.cache
 server/**/utils/Cache.worker/pages/*.html
