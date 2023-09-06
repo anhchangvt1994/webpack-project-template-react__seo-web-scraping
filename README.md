@@ -117,6 +117,3 @@ You can refer to the demos from the following links, remember to enable Lighthou
 
 1. Vercel
    https://webpack-project-template-react-seo-web-scraping.vercel.app/
-
-2. Render
-   https://webpack-project-template-react-seo-web.onrender.com/
