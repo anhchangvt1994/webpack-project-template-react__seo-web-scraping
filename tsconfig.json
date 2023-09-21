@@ -36,10 +36,11 @@
 		"paths": {
 			"@/*": ["../*"],
 			"assets/*": ["assets/*"],
-			"config/*": ["config/*"],
+			"app/*": ["app/*"],
+			"hooks/*": ["hooks/*"],
 			"pages/*": ["pages/*"],
 			"components/*": ["components/*"],
-			"context/*": ["context/*"],
+			"store/*": ["store/*"],
 			"utils/*": ["utils/*"]
 		},
 

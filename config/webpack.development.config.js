@@ -58,7 +58,8 @@ const WebpackDevelopmentConfiguration = async () => {
 			// module: true,
 			// library: { type: 'module' },
 		},
-		devtool: 'inline-source-map', // NOTE - BAD Performance, GOOD debugging
+		// devtool: 'inline-source-map', // NOTE - BAD Performance, GOOD debugging
+		devtool: 'eval-source-map', // NOTE - BAD Performance, GOOD debugging
 		// devtool: 'eval-cheap-module-source-map', // NOTE - SLOW Performance, GOOD debugging
 		// devtool: 'eval', // NOTE - GOOD Performance, BAD debugging
 		// devtool: 'eval-cheap-source-map',
@@ -100,36 +101,36 @@ const WebpackDevelopmentConfiguration = async () => {
 		module: {
 			rules: [
 				// NOTE - Option 2
-				{
-					test: /.(jsx|tsx|js|ts)$/,
-					exclude: /(node_modules)/,
-					use: {
-						loader: 'swc-loader',
-						options: {
-							jsc: {
-								parser: {
-									syntax: 'typescript',
-									tsx: true,
-									decorators: false,
-									dynamicImport: true,
-								},
-								target: 'esnext',
-							},
-						},
-					},
-				},
-				// NOTE - Option 1 (popular)
 				// {
-				// 	test: /\.(jsx|tsx|js|ts)$/,
+				// 	test: /.(jsx|tsx|js|ts)$/,
+				// 	exclude: /(node_modules)/,
 				// 	use: {
-				// 		loader: 'esbuild-loader',
+				// 		loader: 'swc-loader',
 				// 		options: {
-				// 			loader: 'tsx',
-				// 			target: 'esnext',
+				// 			jsc: {
+				// 				parser: {
+				// 					syntax: 'typescript',
+				// 					tsx: true,
+				// 					decorators: false,
+				// 					dynamicImport: true,
+				// 				},
+				// 				target: 'esnext',
+				// 			},
 				// 		},
 				// 	},
-				// 	exclude: /node_modules/,
 				// },
+				// NOTE - Option 1 (popular)
+				{
+					test: /\.(jsx|tsx|js|ts)$/,
+					use: {
+						loader: 'esbuild-loader',
+						options: {
+							loader: 'tsx',
+							target: 'esnext',
+						},
+					},
+					exclude: /node_modules|dist/,
+				},
 				{
 					test: /libs[\\/]socket.io.min.js/,
 					type: 'asset/resource',

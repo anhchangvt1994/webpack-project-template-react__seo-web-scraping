@@ -18,7 +18,7 @@ const routes: RouteObjectCustomize[] = [
 		path: import.meta.env.ROUTER_BASE_PATH,
 		element: (
 			<RouterInit>
-				<RouterValidation NotFoundPage>
+				<RouterValidation NotFoundPage={NotFoundPage}>
 					<RouterDeliver>
 						<RouterProtection
 							WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
