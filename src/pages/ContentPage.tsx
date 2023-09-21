@@ -53,7 +53,7 @@ export default function ContentPage() {
 		'og:image': '',
 		'og:image:width': '1200',
 		'og:image:height': '628',
-		robots: 'noindex, nofollow',
+		robots: 'index, follow',
 	})
 
 	const data: {

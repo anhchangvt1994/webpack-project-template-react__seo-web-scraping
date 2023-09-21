@@ -23,6 +23,14 @@ function Layout() {
 	const route = useRoute()
 	const { userState, setUserState } = useUserInfo()
 
+	if (BotInfo.isBot) {
+		setMetaViewportTag('width=device-width, initial-scale=1')
+	} else {
+		setMetaViewportTag(
+			'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+		)
+	}
+
 	const onClickLogout = () => {
 		setUserState({ email: '' })
 		route.handle.reProtect?.()
