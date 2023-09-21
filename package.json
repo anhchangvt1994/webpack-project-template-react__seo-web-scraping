@@ -3,8 +3,8 @@
 	"scripts": {
 		"start": "cross-env ENV=production MAX_WORKERS=2 CLUSTER_INSTANCES=1 npm run pm2-puppeteer-ssr",
 		"dev": "cross-env ENV=development npm run start-dev",
-		"build": "npx tsc && npx webpack --mode=production",
-		"build:esm": "npx tsc && cross-env ESM=true npx webpack --mode=production",
+		"build": "npx webpack --mode=production",
+		"build:esm": "cross-env ESM=true npx webpack --mode=production",
 		"preview": "npm run start-preview",
 		"start-dev": "cross-env MAX_WORKERS=4 node -r sucrase/register server/src/index.ts & cross-env PORT=3000 IO_PORT=3030 npx webpack serve --mode=development",
 		"start-preview": "cross-env ENV=production CLUSTER_INSTANCES=1 MAX_WORKERS=7 npm run pm2-puppeteer-ssr & cross-env PORT=1234 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js",
@@ -34,10 +34,10 @@
 		"styled-components": "^6.0.2"
 	},
 	"devDependencies": {
-		"server": "file:./server",
+		"build-tool-packages": "file:./config/build-tool-packages",
 		"commit-packages": "file:./config/commit-packages",
 		"lint-and-format-packages": "file:./config/lint-and-format-packages",
-		"build-tool-packages": "file:./config/build-tool-packages"
+		"server": "file:./server"
 	},
 	"eslintConfig": {
 		"extends": [

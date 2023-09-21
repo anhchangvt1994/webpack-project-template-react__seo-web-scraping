@@ -7,6 +7,9 @@ import RouterDeliver from './utils/RouterDeliver'
 import RouterInit from './utils/RouterInit'
 import RouterProtection from './utils/RouterProtection'
 import RouterValidation from './utils/RouterValidation'
+import { ServerStore } from 'store/ServerStore'
+
+ServerStore.init()
 
 const WAITING_VERIFY_ROUTER_ID_LIST: { [key: string]: Array<string> } = {
 	[import.meta.env.ROUTER_COMMENT_ID]: [import.meta.env.ROUTER_LOGIN_ID],
