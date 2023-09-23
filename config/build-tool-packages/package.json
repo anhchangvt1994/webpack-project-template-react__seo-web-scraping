@@ -9,7 +9,7 @@
 	"overrides": {
 		"isomorphic-fetch@*": "$isomorphic-fetch"
 	},
-	"devDependencies": {
+	"dependencies": {
 		"@babel/core": "7.22.15",
 		"@babel/preset-env": "^7.22.15",
 		"@babel/preset-react": "7.22.15",
