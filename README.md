@@ -1,16 +1,16 @@
 ## First and foremost
 
-Vue Web Scraping for SEO project (Vue WSC-SEO) is a project created with the aim of researching and applying the advantages of web scraping to support SEO for Vue projects. It is not intended for commercial purposes and is not allowed to be used for commercialization. Vue WSC-SEO is considered a choice for SEO automation purposes, in addition to providing SSR capabilities for CSR-only frameworks such as VueJS (there is a version for Vue, see [here](https://github.com/anhchangvt1994/webpack-project-template-vue__seo-web-scraping)) and does not require comparison or replacement for current Frontend meta frameworks such as Next, Nuxt, Rmix, SvelteKit, etc.
+React Web Scraping for SEO project (React WSC-SEO) is a project created with the aim of researching and applying the advantages of web scraping to support SEO for React projects. It is not intended for commercial purposes and is not allowed to be used for commercialization. React WSC-SEO is considered a choice for SEO automation purposes, in addition to providing SSR capabilities for CSR-only frameworks such as ReactJS (there is a version for React, see [here](https://github.com/anhchangvt1994/webpack-project-template-react__seo-web-scraping)) and does not require comparison or replacement for current Frontend meta frameworks such as Next, Nuxt, Rmix, SvelteKit, etc.
 
 ## First start
 
 In this repository I will discuss about
 
-- What is Vue Web Scraping for SEO ?
+- What is React Web Scraping for SEO ?
 - More information
 - Deploy guide information for testing
 
-This project is an advance of Webpack Project Vue Template + Vue Router. You can see more information about it in [here](https://github.com/anhchangvt1994/webpack-project--template-vue-ts__vue-router)
+This project is an advance of Webpack Project React Template + React Router. You can see more information about it in [here](https://github.com/anhchangvt1994/webpack-project--template-react-ts__react-router)
 For more information about this project.
 
 ## Table of contents
@@ -25,13 +25,13 @@ For more information about this project.
 Clone source with SSH url:
 
 ```bash
-git clone git@github.com:anhchangvt1994/webpack-project-template-vue__seo-web-scraping.git
+git clone git@github.com:anhchangvt1994/webpack-project-template-react__seo-web-scraping.git
 ```
 
 Install:
 
 ```bash
-cd webpack-project-template-vue__seo-web-scraping
+cd webpack-project-template-react__seo-web-scraping
 ```
 
 If use npm
@@ -56,14 +56,14 @@ bun install
 
 ### Table of benefit information that you must know
 
-- [What is Vue Web Scraping for SEO ?](#what)
+- [What is React Web Scraping for SEO ?](#what)
 - [More information](#more)
 - [Deploy guide information](#deploy)
 
-<h3 id="what">What is Vue Web Scraping for SEO ?</h3>
-Web Scraping for SEO project (Vue WSC-SEO) is a product designed for VueJS developers who have SEO needs but do not want to use Frontend meta frameworks for personal reasons. For those developers, Vue WSC-SEO would be a suitable choice. Vue WSC-SEO helps frontend developers focus only on processing business code and not worry about anything else beyond the limits of a VueJS framework. It eliminates the need to worry about
+<h3 id="what">What is React Web Scraping for SEO ?</h3>
+Web Scraping for SEO project (React WSC-SEO) is a product designed for ReactJS developers who have SEO needs but do not want to use Frontend meta frameworks for personal reasons. For those developers, React WSC-SEO would be a suitable choice. React WSC-SEO helps frontend developers focus only on processing business code and not worry about anything else beyond the limits of a ReactJS framework. It eliminates the need to worry about
 
-- How to SEO with just VueJS usage ?
+- How to SEO with just ReactJS usage ?
 - How to optimize SEO ? (block scripts, block resources, large images, need some attributes to make tag valid ...)
 - When run the business code ? (on server side or client side ?)
 
@@ -75,11 +75,11 @@ Web Scraping for SEO project (Vue WSC-SEO) is a product designed for VueJS devel
 
 **> Why use this project ?**
 
-<p>As introduced above, Vue WSC-SEO provides VueJS developers with an additional option for easy access and SEO optimization if needed. To provide developers with more information about the product and make a more informed decision about its use, Vue WSC-SEO will provide the following specific advantages and disadvantages:</p>
+<p>As introduced above, React WSC-SEO provides ReactJS developers with an additional option for easy access and SEO optimization if needed. To provide developers with more information about the product and make a more informed decision about its use, React WSC-SEO will provide the following specific advantages and disadvantages:</p>
 
 Advantages:
 
-- Provides ISR capabilities for CSR-only VueJS frameworks (without VueJS SSR create feature)
+- Provides ISR capabilities for CSR-only ReactJS frameworks (without ReactJS SSR create feature)
 - Provides automation in optimizing for the entire Lighthouse score
 - Helps developers focus entirely on business code without worrying about server code
 
@@ -95,13 +95,13 @@ I already created utils for this necessary, you just type **setSeoTag** for all 
 // NOTE - Setup for all
 setSeoTag({
 	title: 'Home page',
-	keywords: 'Home page, vue 3, wsc-seo',
-	description: 'Home page Vue 3.x and WSC-SEO',
+	keywords: 'Home page, react 3, wsc-seo',
+	description: 'Home page React 3.x and WSC-SEO',
 	'og:type': 'website',
 	'og:title': 'Home page',
-	'og:description': 'Home page Vue 3.x and WSC-SEO',
+	'og:description': 'Home page React 3.x and WSC-SEO',
 	'og:url': window.location.pathname,
-	'og:site_name': 'Vue 3.x and WSC-SEO',
+	'og:site_name': 'React 3.x and WSC-SEO',
 	'og:image': '',
 	'og:image:width': '1200',
 	'og:image:height': '628',
@@ -111,7 +111,7 @@ setSeoTag({
 // NOTE - Setup for each
 setMetaKeywordsTag('Home page')
 setMetaRobotsTag('index, follow')
-setMetaDescriptionTag('Home page Vue 3.x and WSC-SEO')
+setMetaDescriptionTag('Home page React 3.x and WSC-SEO')
 ```
 
 **> How to setup link SEO tags ?**
@@ -122,13 +122,13 @@ I already created utils for this necessary, you just type **setSeoTag** for all 
 // NOTE - Setup for all
 setSeoTag({
 	title: 'Home page',
-	keywords: 'Home page, vue 3, wsc-seo',
-	description: 'Home page Vue 3.x and WSC-SEO',
+	keywords: 'Home page, react 3, wsc-seo',
+	description: 'Home page React 3.x and WSC-SEO',
 	'og:type': 'website',
 	'og:title': 'Home page',
-	'og:description': 'Home page Vue 3.x and WSC-SEO',
+	'og:description': 'Home page React 3.x and WSC-SEO',
 	'og:url': window.location.pathname,
-	'og:site_name': 'Vue 3.x and WSC-SEO',
+	'og:site_name': 'React 3.x and WSC-SEO',
 	'og:image': '',
 	'og:image:width': '1200',
 	'og:image:height': '628',
@@ -253,4 +253,4 @@ Because the resource of free paid will have a lowest of power (lowest bandwidth,
 
 > This demo url will take more time to restart after sleep
 
-https://webpack-project-template-vue-seo-web.onrender.com
+https://webpack-project-template-react-seo-web.onrender.com
