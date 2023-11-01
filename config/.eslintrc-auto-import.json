@@ -96,6 +96,9 @@
     "useSlug": true,
     "useSlugWithoutDash": true,
     "useTitleCase": true,
-    "useUnsignedLetters": true
+    "useUnsignedLetters": true,
+    "LocaleInfo": true,
+    "getLocale": true,
+    "useLocaleInfo": true
   }
 }

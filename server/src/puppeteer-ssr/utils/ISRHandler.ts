@@ -24,7 +24,7 @@ const browserManager = (() => {
 	return BrowserManager()
 })()
 
-interface ISSRHandlerParam {
+interface IISRHandlerParam {
 	startGenerating: number
 	isFirstRequest: boolean
 	url: string
@@ -39,7 +39,7 @@ const getRestOfDuration = (startGenerating, gapDuration = 0) => {
 const waitResponse = async (page: Page, url: string, duration: number) => {
 	const timeoutDuration = (() => {
 		const maxDuration =
-			BANDWIDTH_LEVEL === BANDWIDTH_LEVEL_LIST.TWO ? 3000 : DURATION_TIMEOUT
+			BANDWIDTH_LEVEL === BANDWIDTH_LEVEL_LIST.TWO ? 2000 : DURATION_TIMEOUT
 
 		return duration > maxDuration ? maxDuration : duration
 	})()
@@ -102,7 +102,7 @@ const waitResponse = async (page: Page, url: string, duration: number) => {
 
 const gapDurationDefault = 1500
 
-const SSRHandler = async ({ isFirstRequest, url }: ISSRHandlerParam) => {
+const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 	const startGenerating = Date.now()
 	if (getRestOfDuration(startGenerating, gapDurationDefault) <= 0) return
 
@@ -240,4 +240,4 @@ const SSRHandler = async ({ isFirstRequest, url }: ISSRHandlerParam) => {
 	// }
 }
 
-export default SSRHandler
+export default ISRHandler

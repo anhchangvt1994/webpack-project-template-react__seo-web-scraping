@@ -158,6 +158,7 @@ module.exports = async (env, arg) => {
 					},
 					{
 						'app/router/context/InfoContext': ['useRoute'],
+						'app/router/context/LocaleInfoContext': ['useLocaleInfo'],
 						'utils/StringHelper.ts': [
 							'getSlug',
 							'getSlugWithoutDash',
@@ -165,6 +166,7 @@ module.exports = async (env, arg) => {
 							'getCustomSlug',
 							'generateTitleCase',
 							'generateSentenceCase',
+							'getLocale',
 						],
 						'hooks/useStringHelper.ts': [
 							'useSlug',
@@ -203,7 +205,7 @@ module.exports = async (env, arg) => {
 							'setMetaTwitterCardTag',
 							'setSeoTag',
 						],
-						'store/ServerStore.ts': ['BotInfo', 'DeviceInfo'],
+						'store/ServerStore.ts': ['BotInfo', 'DeviceInfo', 'LocaleInfo'],
 						'utils/CookieHelper.ts': ['getCookie', 'setCookie'],
 					},
 					{
