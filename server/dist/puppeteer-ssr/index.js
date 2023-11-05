@@ -204,19 +204,21 @@ const puppeteerSSRService = (async () => {
 			 * calc by using:
 			 * https://www.inchcalculator.com/convert/year-to-second/
 			 */
-			if (headers.accept === 'application/json') res.send({ statusCode: 200 })
-			else
-				return res
+			if (headers.accept === 'application/json')
+				res.send({ status: 200, originPath: pathname, path: pathname })
+			else {
+				const filePath =
+					req.headers['static-html-path'] ||
+					_path2.default.resolve(__dirname, '../../../dist/index.html')
+
+				res
 					.set({
 						// 'Cache-Control': 'public, max-age: 31556952',
 						'Cache-Control': 'no-store',
 					})
 					.status(200)
-					.sendFile(
-						req.headers['static-html-path'] ||
-							_path2.default.resolve(__dirname, '../../../dist/index.html'),
-						{ etag: false, lastModified: false }
-					) // Serve prerendered page as response.
+					.sendFile(filePath, { etag: false, lastModified: false }) // Serve prerendered page as response.
+			}
 		})
 
 		// Hàm middleware xử lý lỗi cuối cùng

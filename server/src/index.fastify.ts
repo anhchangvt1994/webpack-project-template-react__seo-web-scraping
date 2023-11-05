@@ -53,7 +53,7 @@ const startServer = async () => {
 	app
 		.use(cors())
 		.use('/robots.txt', serveStatic(path.resolve(__dirname, '../robots.txt')))
-		.use(async function (req, res, next) {
+		.use(function (req, res, next) {
 			const isStatic = detectStaticExtension(req as any)
 			/**
 			 * NOTE
@@ -82,7 +82,7 @@ const startServer = async () => {
 		.use(function (req, res, next) {
 			let botInfo
 			if (req.headers.service === 'puppeteer') {
-				botInfo = req.headers['bot_info'] || ''
+				botInfo = req.headers['botInfo'] || ''
 			} else {
 				botInfo = JSON.stringify(detectBot(req as any))
 			}
@@ -155,7 +155,7 @@ const startServer = async () => {
 		.use(function (req, res, next) {
 			let deviceInfo
 			if (req.headers.service === 'puppeteer') {
-				deviceInfo = req.headers['device_info'] || ''
+				deviceInfo = req.headers['deviceInfo'] || ''
 			} else {
 				deviceInfo = JSON.stringify(detectDevice(req as any))
 			}

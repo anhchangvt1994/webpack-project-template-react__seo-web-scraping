@@ -72,7 +72,7 @@ const waitResponse = async (page, url, duration) => {
 	const startWaiting = Date.now()
 	let response
 	try {
-		response = await page.goto(url, {
+		response = await page.goto(url.split('?')[0], {
 			waitUntil: 'networkidle2',
 			timeout: timeoutDuration,
 		})

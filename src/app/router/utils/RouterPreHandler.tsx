@@ -42,7 +42,7 @@ const fetchOnRoute = (() => {
 	}
 })() // fetchOnRoute
 
-const VALID_CODE_LIST = [200]
+const SUCCESS_CODE_LIST = [200]
 const REDIRECT_CODE_LIST = [301, 302]
 const ERROR_CODE_LIST = [404, 500, 502, 504]
 
@@ -79,7 +79,7 @@ export default function RouterLocaleValidation({ children }) {
 
 			if (tmpValidPathInfo) return tmpValidPathInfo
 			tmpValidPathInfo = validPathListCached.get(
-				location.pathname.replace(`/${locale}`, '')
+				location.pathname.replace(new RegExp(`^(\/|)${locale}`), '') || '/'
 			)
 
 			return tmpValidPathInfo
@@ -111,20 +111,40 @@ export default function RouterLocaleValidation({ children }) {
 				}
 
 				if (res) {
-					if (REDIRECT_CODE_LIST.includes(res.status)) {
-						if (location.search === res.search) {
+					if (
+						REDIRECT_CODE_LIST.includes(res.status) ||
+						(SUCCESS_CODE_LIST.includes(res.status) && locale)
+					) {
+						if (
+							!(location.search && res.search) ||
+							location.search === res.search
+						) {
 							validPathListCached.set(
-								res.originPath.replace(`/${curLocale}`, '') || '/',
+								res.originPath?.replace(new RegExp(`^(\/|)${curLocale}`), '') ??
+									'/',
 								{
-									status: res.status,
-									path: res.path,
+									status: SUCCESS_CODE_LIST.includes(res.status)
+										? 301
+										: res.status,
+									path:
+										res.path?.replace(
+											new RegExp(
+												`^(\/|)${getLocale(
+													LocaleInfo.langSelected,
+													LocaleInfo.countrySelected
+												)}`
+											),
+											''
+										) ?? '/',
 								}
 							)
 						}
 
-						setElement(
-							<Navigate to={(res.path + res.search) as string} replace />
-						)
+						if (REDIRECT_CODE_LIST.includes(res.status))
+							setElement(
+								<Navigate to={(res.path + res.search) as string} replace />
+							)
+						else setElement(children)
 					} else {
 						const tmpPath =
 							location.pathname.replace(`/${curLocale}`, '') || '/'
@@ -133,17 +153,19 @@ export default function RouterLocaleValidation({ children }) {
 							path: tmpPath,
 						})
 
+						resetSeoTag()
 						setElement(children)
 					}
 				} else {
+					resetSeoTag()
 					setElement(children)
 				}
 			})
 		} else if (
 			enableLocale &&
 			validPathInfo &&
-			location.pathname.replace(`/${locale}`, '') ===
-				prevPath.replace(`/${curLocale}`, '')
+			location.pathname.replace(new RegExp(`^(\/|)${locale}`), '') ===
+				prevPath.replace(new RegExp(`^(\/|)${curLocale}`), '')
 		) {
 			const arrLocale = location.pathname.split('/')[1]?.split('-')
 
@@ -189,11 +211,12 @@ export default function RouterLocaleValidation({ children }) {
 					replace
 				/>
 			)
-		} else setElement(children)
+		} else {
+			resetSeoTag()
+			setElement(children)
+		}
 
 		prevPath = location.pathname
-
-		// resetSeoTag()
 	}, [location.pathname])
 
 	return element

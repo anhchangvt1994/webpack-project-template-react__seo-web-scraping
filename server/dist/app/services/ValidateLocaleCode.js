@@ -3,6 +3,13 @@ Object.defineProperty(exports, '__esModule', { value: true })
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj }
 }
+function _nullishCoalesce(lhs, rhsFn) {
+	if (lhs != null) {
+		return lhs
+	} else {
+		return rhsFn()
+	}
+}
 function _optionalChain(ops) {
 	let lastAccessLHS = undefined
 	let value = ops[0]
@@ -35,11 +42,22 @@ var _StringHelper = require('../../utils/StringHelper')
 const ValidateLocaleCode = (redirectResult, res) => {
 	if (!_serverconfig2.default.locale.enable) return redirectResult
 
-	const LocaleInfo = _optionalChain([
-		_CookieHandler.getCookieFromResponse.call(void 0, res),
-		'optionalAccess',
-		(_) => _['LocaleInfo'],
-	])
+	const LocaleInfo = _nullishCoalesce(
+		_optionalChain([
+			res,
+			'access',
+			(_) => _.cookies,
+			'optionalAccess',
+			(_2) => _2.localeInfo,
+		]),
+		() =>
+			_optionalChain([
+				_CookieHandler.getCookieFromResponse.call(void 0, res),
+				'optionalAccess',
+				(_3) => _3['LocaleInfo'],
+			])
+	)
+
 	const defaultLocale = _StringHelper.getLocale.call(
 		void 0,
 		LocaleInfo.defaultLang,

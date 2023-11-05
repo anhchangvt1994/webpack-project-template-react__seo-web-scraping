@@ -136,7 +136,7 @@ const startServer = async () => {
 		.use(function (req, res, next) {
 			let botInfo
 			if (req.headers.service === 'puppeteer') {
-				botInfo = req.headers['bot_info'] || ''
+				botInfo = req.headers['botInfo'] || ''
 			} else {
 				botInfo = JSON.stringify(_DetectBot2.default.call(void 0, req))
 			}
@@ -221,7 +221,7 @@ const startServer = async () => {
 		.use(function (req, res, next) {
 			let deviceInfo
 			if (req.headers.service === 'puppeteer') {
-				deviceInfo = req.headers['device_info'] || ''
+				deviceInfo = req.headers['deviceInfo'] || ''
 			} else {
 				deviceInfo = JSON.stringify(_DetectDevice2.default.call(void 0, req))
 			}

@@ -155,14 +155,15 @@ const puppeteerSSRService = (async () => {
 			 * https://www.inchcalculator.com/convert/year-to-second/
 			 */
 			if (headers.accept === 'application/json')
-				res.header('Cache-Control', 'no-store').send({ statusCode: 200 })
+				res
+					.header('Cache-Control', 'no-store')
+					.send({ status: 200, originPath: pathname, path: pathname })
 			else {
-				res.raw.setHeader('Cache-Control', 'no-store')
-				return sendFile(
+				const filePath =
 					(req.headers['static-html-path'] as string) ||
-						path.resolve(__dirname, '../../../dist/index.html'),
-					res.raw
-				)
+					path.resolve(__dirname, '../../../dist/index.html')
+				res.raw.setHeader('Cache-Control', 'no-store')
+				return sendFile(filePath, res.raw)
 			}
 		})
 	}

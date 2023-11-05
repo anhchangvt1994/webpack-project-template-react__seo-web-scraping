@@ -14,7 +14,10 @@ const ValidateLocaleCode = (
 ): IRedirectResult => {
 	if (!ServerConfig.locale.enable) return redirectResult
 
-	const LocaleInfo = getCookieFromResponse(res)?.['LocaleInfo'] as ILocaleInfo
+	const LocaleInfo =
+		res.cookies?.localeInfo ??
+		(getCookieFromResponse(res)?.['LocaleInfo'] as ILocaleInfo)
+
 	const defaultLocale = getLocale(
 		LocaleInfo.defaultLang,
 		LocaleInfo.defaultCountry

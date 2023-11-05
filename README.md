@@ -67,6 +67,7 @@ bun install
   - [What is DeviceInfo variable ?](#device-info)
   - [What is LocaleInfo variable ?](#locale-info)
   - [Integrate Fastify option to improve benchmark](#integrate-fastify)
+  - [Integrate uWebSockets option to improve benchmark](#integrate-uws)
 - [Deploy guide information](#deploy)
 
 <h3 id="what">What is React Web Scraping for SEO ?</h3>
@@ -103,18 +104,18 @@ I already created utils for this necessary, you just type **setSeoTag** for all 
 ```typescript
 // NOTE - Setup for all
 setSeoTag({
-	title: 'Home page',
-	keywords: 'Home page, react 3, wsc-seo',
-	description: 'Home page React 3.x and WSC-SEO',
-	'og:type': 'website',
-	'og:title': 'Home page',
-	'og:description': 'Home page React 3.x and WSC-SEO',
-	'og:url': window.location.pathname,
-	'og:site_name': 'React 3.x and WSC-SEO',
-	'og:image': '',
-	'og:image:width': '1200',
-	'og:image:height': '628',
-	robots: 'index, follow',
+  title: 'Home page',
+  keywords: 'Home page, react 3, wsc-seo',
+  description: 'Home page React 3.x and WSC-SEO',
+  'og:type': 'website',
+  'og:title': 'Home page',
+  'og:description': 'Home page React 3.x and WSC-SEO',
+  'og:url': window.location.pathname,
+  'og:site_name': 'React 3.x and WSC-SEO',
+  'og:image': '',
+  'og:image:width': '1200',
+  'og:image:height': '628',
+  robots: 'index, follow',
 })
 
 // NOTE - Setup for each
@@ -130,18 +131,18 @@ I already created utils for this necessary, you just type **setSeoTag** for all 
 ```javascript
 // NOTE - Setup for all
 setSeoTag({
-	title: 'Home page',
-	keywords: 'Home page, react 3, wsc-seo',
-	description: 'Home page React 3.x and WSC-SEO',
-	'og:type': 'website',
-	'og:title': 'Home page',
-	'og:description': 'Home page React 3.x and WSC-SEO',
-	'og:url': window.location.pathname,
-	'og:site_name': 'React 3.x and WSC-SEO',
-	'og:image': '',
-	'og:image:width': '1200',
-	'og:image:height': '628',
-	robots: 'index, follow',
+  title: 'Home page',
+  keywords: 'Home page, react 3, wsc-seo',
+  description: 'Home page React 3.x and WSC-SEO',
+  'og:type': 'website',
+  'og:title': 'Home page',
+  'og:description': 'Home page React 3.x and WSC-SEO',
+  'og:url': window.location.pathname,
+  'og:site_name': 'React 3.x and WSC-SEO',
+  'og:image': '',
+  'og:image:width': '1200',
+  'og:image:height': '628',
+  robots: 'index, follow',
 })
 
 // NOTE - Setup for each
@@ -160,19 +161,19 @@ Use it when you just need to redirect from original path to new path and this pa
 
 ```typescript
 export interface IRedirectInfoItem {
-	statusCode: number
-	path: string
-	targetPath: string
+  statusCode: number
+  path: string
+  targetPath: string
 }
 
 // NOTE - Declare redirects
 export const REDIRECT_INFO: IRedirectInfoItem[] = [
-	// NOTE - redirect from pathname /test to pathname / with status code 302
-	{
-		path: '/test',
-		targetPath: '/',
-		statusCode: 302,
-	},
+  // NOTE - redirect from pathname /test to pathname / with status code 302
+  {
+    path: '/test',
+    targetPath: '/',
+    statusCode: 302,
+  },
 ]
 ```
 
@@ -185,35 +186,35 @@ import { Request } from 'express'
 
 // NOTE - Declare redirect middleware
 export const REDIRECT_INJECTION = (redirectUrl, req, res): IRedirectResult => {
-	let statusCode = 200
+  let statusCode = 200
 
-	const pathSplitted = redirectUrl.split('/')
+  const pathSplitted = redirectUrl.split('/')
 
-	if (pathSplitted.length === 2 && /(0|1|2)$/.test(redirectUrl)) {
-		statusCode = 302
-		redirectUrl = redirectUrl.replace(/(0|1|2)$/, '3')
-	}
+  if (pathSplitted.length === 2 && /(0|1|2)$/.test(redirectUrl)) {
+    statusCode = 302
+    redirectUrl = redirectUrl.replace(/(0|1|2)$/, '3')
+  }
 
-	const localeCodeValidationResult = ValidateLocaleCode(redirectUrl, res)
+  const localeCodeValidationResult = ValidateLocaleCode(redirectUrl, res)
 
-	if (localeCodeValidationResult.statusCode !== 200) {
-		// NOTE - 301 is the priority status code
-		/*
-		 * We just need redirect one time for all case
-		 * "one redirect for all redirect case
-		 * not one redirect for one case"
-		 * If the prev case have 301 status -> it will be
-		 * statusCode for all next case
-		 */
-		statusCode =
-			statusCode === 301 ? statusCode : localeCodeValidationResult.statusCode
-		redirectUrl = localeCodeValidationResult.redirectUrl
-	}
+  if (localeCodeValidationResult.statusCode !== 200) {
+    // NOTE - 301 is the priority status code
+    /*
+    * We just need redirect one time for all case
+    * "one redirect for all redirect case
+    * not one redirect for one case"
+    * If the prev case have 301 status -> it will be
+    * statusCode for all next case
+    */
+    statusCode =
+    statusCode === 301 ? statusCode : localeCodeValidationResult.statusCode
+    redirectUrl = localeCodeValidationResult.redirectUrl
+  }
 
-	return {
-		statusCode,
-		redirectUrl,
-	}
+  return {
+    statusCode,
+    redirectUrl,
+  }
 } // REDIRECT_INJECTION
 ```
 
@@ -225,12 +226,12 @@ You can config some behavior for server to match with your necessary, to do it y
 import { defineServerConfig } from './utils/ServerConfigHandler'
 
 const ServerConfig = defineServerConfig({
-	locale: {
-		enable: true, // enable use /:locale dispatcher param (default false)
-		defaultLang: 'en', // default language for website
-		defaultCountry: 'us', // default country for website (set it empty if you just use language)
-		// hideDefaultLocale: false // hide the default locale or show it such as other locales (default true)
-	},
+  locale: {
+    enable: true, // enable use /:locale dispatcher param (default false)
+    defaultLang: 'en', // default language for website
+    defaultCountry: 'us', // default country for website (set it empty if you just use language)
+    // hideDefaultLocale: false // hide the default locale or show it such as other locales (default false)
+  },
 })
 
 export default ServerConfig
@@ -242,8 +243,8 @@ export default ServerConfig
 
 ```typescript
 interface IBotInfo {
-	isBot: boolean
-	name: string
+  isBot: boolean
+  name: string
 }
 ```
 
@@ -253,9 +254,9 @@ interface IBotInfo {
 
 ```typescript
 interface IDeviceInfo {
-	type: string
-	isMobile: string | boolean
-	os: string
+  type: string
+  isMobile: string | boolean
+  os: string
 }
 ```
 
@@ -266,23 +267,23 @@ interface IDeviceInfo {
 
 ```typescript
 export interface ILocaleInfo {
-	lang: string // user's language (base on location)
-	country: string // user's country (base on location)
-	clientLang: string // browser's language (base on user's browser in use)
-	clientCountry: string // browser's country (base on user's browser in use)
-	defaultLang: string // default language of website (you define it in server.config.ts, it will be client language if empty)
-	defaultCountry: string // default country of website (you define it in server.config.ts, it will be client country if empty)
-	langSelected: string // language selected by user (it will be default language if empty)
-	countrySelected: string // country selected by user
-	hideDefaultLocale: boolean // If your default locale is /en-us and you need to hide it -> use it (default true)
-	range: [number, number]
-	region: string
-	eu: string
-	timezone: string
-	city: string
-	ll: [number, number]
-	metro: number
-	area: number
+  lang: string // user's language (base on location)
+  country: string // user's country (base on location)
+  clientLang: string // browser's language (base on user's browser in use)
+  clientCountry: string // browser's country (base on user's browser in use)
+  defaultLang: string // default language of website (you define it in server.config.ts, it will be client language if empty)
+  defaultCountry: string // default country of website (you define it in server.config.ts, it will be client country if empty)
+  langSelected: string // language selected by user (it will be default language if empty)
+  countrySelected: string // country selected by user
+  hideDefaultLocale: boolean // If your default locale is /en-us and you need to hide it -> use it (default true)
+  range: [number, number]
+  region: string
+  eu: string
+  timezone: string
+  city: string
+  ll: [number, number]
+  metro: number
+  area: number
 }
 ```
 
@@ -303,6 +304,25 @@ npm run preview:fastify
 
 ```json
 "start": "cross-env ENV=production MAX_WORKERS=2 CLUSTER_INSTANCES=1 npm run pm2-puppeteer-ssr:fastify",
+```
+
+#### <p id="integrate-uws">Integrate uWebSockets option to improve the benchmark</p>
+
+<p>Inside <a href="https://expressjs.com/" target="_blank">ExpressJS</a> like the default and <a href="https://fastify.dev/" target="_blank">FastifyJS</a> like an option, I also integrated <a href="https://github.com/uNetworking/uWebSockets" target="_blank">uWebSockets</a> into the project to take advantage of uWebSockets's benchmark processing capability, thereby improving the performance and flexibility of the project.</p>
+<p>You can use it by using the command lines above</p>
+
+```bash
+npm run dev:uws
+```
+
+```bash
+npm run preview:uws
+```
+
+<p>And you can setup it for "start" script to deploy into your server by replace "pm2-puppeteer-ssr" to "pm2-puppeteer-ssr:uws"</p>
+
+```json
+"start": "cross-env ENV=production MAX_WORKERS=2 CLUSTER_INSTANCES=1 npm run pm2-puppeteer-ssr:uws",
 ```
 
 <h3 id="deploy">Deploy guide information for testing</h3>
