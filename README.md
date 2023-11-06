@@ -287,6 +287,9 @@ export interface ILocaleInfo {
 }
 ```
 
+<p>NOTE:</p>
+Beside the `LocaleInfo` used such as a normal variable to get more information about locale, this project also provide to you a hook called `useLocale` which help you get and watch the information about `lang` (language) and `country` that you using.
+
 #### <p id="integrate-fastify">Integrate Fastify option to improve the benchmark</p>
 
 <p>Inside <a href="https://expressjs.com/" target="_blank">ExpressJS</a> like the default, I also integrated <a href="https://fastify.dev/" target="_blank">FastifyJS</a> into the project to take advantage of FastifyJS's benchmark processing capability, thereby improving the performance and flexibility of the project.</p>
