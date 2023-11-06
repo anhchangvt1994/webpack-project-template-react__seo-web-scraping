@@ -288,6 +288,7 @@ export interface ILocaleInfo {
 ```
 
 <p>NOTE:</p>
+
 Beside the `LocaleInfo` used such as a normal variable to get more information about locale, this project also provide to you a hook called `useLocale` which help you get and watch the information about `lang` (language) and `country` that you using.
 
 #### <p id="integrate-fastify">Integrate Fastify option to improve the benchmark</p>
