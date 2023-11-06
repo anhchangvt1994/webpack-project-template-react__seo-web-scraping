@@ -15,10 +15,11 @@ import {
 } from '../constants'
 import { ENV } from '../../constants'
 import { ISSRResult } from '../types'
-import BrowserManager from './BrowserManager'
+import BrowserManager, { IBrowser } from './BrowserManager'
 import CacheManager from './CacheManager'
 
 const browserManager = (() => {
+	if (ENV === 'development') return undefined as unknown as IBrowser
 	if (POWER_LEVEL === POWER_LEVEL_LIST.THREE)
 		return BrowserManager(() => `${userDataPath}/user_data_${Date.now()}`)
 	return BrowserManager()

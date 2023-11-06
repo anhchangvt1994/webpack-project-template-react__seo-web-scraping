@@ -3,16 +3,18 @@ Object.defineProperty(exports, '__esModule', { value: true })
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj }
 }
-var _path = require('path')
-var _path2 = _interopRequireDefault(_path)
 var _fs = require('fs')
 var _fs2 = _interopRequireDefault(_fs)
+var _path = require('path')
+var _path2 = _interopRequireDefault(_path)
+var _servestatic = require('serve-static')
+var _servestatic2 = _interopRequireDefault(_servestatic)
 
+var _constants = require('../../constants')
 var _DetectStaticExtensionuws = require('../../utils/DetectStaticExtension.uws')
 var _DetectStaticExtensionuws2 = _interopRequireDefault(
 	_DetectStaticExtensionuws
 )
-var _constants = require('../../constants')
 
 const DetectStaticMiddle = (res, req) => {
 	const isStatic = _DetectStaticExtensionuws2.default.call(void 0, req)
@@ -34,9 +36,9 @@ const DetectStaticMiddle = (res, req) => {
 		}
 
 		try {
+			const mimeType = _servestatic2.default.mime.lookup(filePath)
 			const body = _fs2.default.readFileSync(filePath)
-			res.end(body)
-			// req.setYield(true)
+			res.writeHeader('Content-Type', mimeType).end(body)
 		} catch (e) {
 			res.writeStatus('404')
 			res.end('File not found')

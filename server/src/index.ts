@@ -140,7 +140,9 @@ const startServer = async () => {
 							'$1'
 						)
 					res.writeHead(redirectResult.status, {
-						Location: redirectResult.path,
+						Location: `${redirectResult.path}${
+							redirectResult.search ? redirectResult.search : ''
+						}`,
 						'cache-control': 'no-store',
 					})
 					return res.end()
@@ -175,10 +177,10 @@ const startServer = async () => {
 
 	if (process.env.ENV === 'development') {
 		// NOTE - restart server onchange
-		const watcher = chokidar.watch([path.resolve(__dirname, './**/*.ts')], {
-			ignored: /$^/,
-			persistent: true,
-		})
+		// const watcher = chokidar.watch([path.resolve(__dirname, './**/*.ts')], {
+		// 	ignored: /$^/,
+		// 	persistent: true,
+		// })
 
 		if (!process.env.REFRESH_SERVER) {
 			spawn(
@@ -191,21 +193,21 @@ const startServer = async () => {
 			)
 		}
 
-		watcher.on('change', async (path) => {
-			Console.log(`File ${path} has been changed`)
-			await server.close()
-			spawn(
-				'node',
-				[
-					'cross-env REFRESH_SERVER=1 --require sucrase/register server/src/index.ts',
-				],
-				{
-					stdio: 'inherit',
-					shell: true,
-				}
-			)
-			process.exit(0)
-		})
+		// watcher.on('change', async (path) => {
+		// 	Console.log(`File ${path} has been changed`)
+		// 	await server.close()
+		// 	spawn(
+		// 		'node',
+		// 		[
+		// 			'cross-env REFRESH_SERVER=1 --require sucrase/register server/src/index.ts',
+		// 		],
+		// 		{
+		// 			stdio: 'inherit',
+		// 			shell: true,
+		// 		}
+		// 	)
+		// 	process.exit(0)
+		// })
 	} else {
 		spawn(
 			'cross-env',

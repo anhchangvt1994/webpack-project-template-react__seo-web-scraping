@@ -1,8 +1,9 @@
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
+import serveStatic from 'serve-static'
 import { HttpRequest, HttpResponse } from 'uWebSockets.js'
-import detectStaticExtension from '../../utils/DetectStaticExtension.uws'
 import { ENV } from '../../constants'
+import detectStaticExtension from '../../utils/DetectStaticExtension.uws'
 
 const DetectStaticMiddle = (res: HttpResponse, req: HttpRequest): Boolean => {
 	const isStatic = detectStaticExtension(req)
@@ -21,9 +22,9 @@ const DetectStaticMiddle = (res: HttpResponse, req: HttpRequest): Boolean => {
 		}
 
 		try {
+			const mimeType = serveStatic.mime.lookup(filePath)
 			const body = fs.readFileSync(filePath)
-			res.end(body)
-			// req.setYield(true)
+			res.writeHeader('Content-Type', mimeType as string).end(body)
 		} catch {
 			res.writeStatus('404')
 			res.end('File not found')

@@ -44,6 +44,7 @@ var _CacheManager = require('./CacheManager')
 var _CacheManager2 = _interopRequireDefault(_CacheManager)
 
 const browserManager = (() => {
+	if (_constants.ENV === 'development') return undefined
 	if (_constants3.POWER_LEVEL === _constants3.POWER_LEVEL_LIST.THREE)
 		return _BrowserManager2.default.call(
 			void 0,

@@ -31,8 +31,7 @@ function _optionalChain(ops) {
 	return value
 }
 var _child_process = require('child_process')
-var _chokidar = require('chokidar')
-var _chokidar2 = _interopRequireDefault(_chokidar)
+
 var _cors = require('cors')
 var _cors2 = _interopRequireDefault(_cors)
 var _express = require('express')
@@ -211,7 +210,9 @@ const startServer = async () => {
 							'$1'
 						)
 					res.writeHead(redirectResult.status, {
-						Location: redirectResult.path,
+						Location: `${redirectResult.path}${
+							redirectResult.search ? redirectResult.search : ''
+						}`,
 						'cache-control': 'no-store',
 					})
 					return res.end()
@@ -253,13 +254,10 @@ const startServer = async () => {
 
 	if (process.env.ENV === 'development') {
 		// NOTE - restart server onchange
-		const watcher = _chokidar2.default.watch(
-			[_path2.default.resolve(__dirname, './**/*.ts')],
-			{
-				ignored: /$^/,
-				persistent: true,
-			}
-		)
+		// const watcher = chokidar.watch([path.resolve(__dirname, './**/*.ts')], {
+		// 	ignored: /$^/,
+		// 	persistent: true,
+		// })
 
 		if (!process.env.REFRESH_SERVER) {
 			_child_process.spawn.call(
@@ -273,22 +271,21 @@ const startServer = async () => {
 			)
 		}
 
-		watcher.on('change', async (path) => {
-			_ConsoleHandler2.default.log(`File ${path} has been changed`)
-			await server.close()
-			_child_process.spawn.call(
-				void 0,
-				'node',
-				[
-					'cross-env REFRESH_SERVER=1 --require sucrase/register server/src/index.ts',
-				],
-				{
-					stdio: 'inherit',
-					shell: true,
-				}
-			)
-			process.exit(0)
-		})
+		// watcher.on('change', async (path) => {
+		// 	Console.log(`File ${path} has been changed`)
+		// 	await server.close()
+		// 	spawn(
+		// 		'node',
+		// 		[
+		// 			'cross-env REFRESH_SERVER=1 --require sucrase/register server/src/index.ts',
+		// 		],
+		// 		{
+		// 			stdio: 'inherit',
+		// 			shell: true,
+		// 		}
+		// 	)
+		// 	process.exit(0)
+		// })
 	} else {
 		_child_process.spawn.call(
 			void 0,
