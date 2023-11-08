@@ -59,7 +59,7 @@ pm2.connect(false, (err) => {
 					name: 'puppeteer-ssr',
 					script: `${distPath}/index.uws.${resourceExtension}`,
 					instances: CLUSTER_INSTANCES,
-					exec_mode: CLUSTER_INSTANCES === 1 ? 'fork' : 'cluster',
+					exec_mode: 'cluster',
 					interpreter: './node_modules/.bin/sucrase',
 					interpreter_args: '--require sucrase/register',
 					wait_ready: true,
