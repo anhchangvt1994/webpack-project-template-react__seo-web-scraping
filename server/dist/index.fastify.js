@@ -49,8 +49,7 @@ var _indexfastify = require('./puppeteer-ssr/index.fastify')
 var _indexfastify2 = _interopRequireDefault(_indexfastify)
 var _serverconfig = require('./server.config')
 var _serverconfig2 = _interopRequireDefault(_serverconfig)
-var _ConsoleHandler = require('./utils/ConsoleHandler')
-var _ConsoleHandler2 = _interopRequireDefault(_ConsoleHandler)
+
 var _CookieHandler = require('./utils/CookieHandler')
 var _DetectBot = require('./utils/DetectBot')
 var _DetectBot2 = _interopRequireDefault(_DetectBot)
@@ -251,7 +250,7 @@ const startServer = async () => {
 			port,
 		},
 		() => {
-			_ConsoleHandler2.default.log('Server started. Press Ctrl+C to quit')
+			console.log(`Server started port ${port}. Press Ctrl+C to quit`)
 			_optionalChain([
 				process,
 				'access',

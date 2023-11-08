@@ -166,7 +166,7 @@ const startServer = async () => {
 	;(await puppeteerSSRService).init(app)
 
 	server.listen(port, () => {
-		Console.log('Server started. Press Ctrl+C to quit')
+		console.log(`Server started port ${port}. Press Ctrl+C to quit`)
 		process.send?.('ready')
 	})
 

@@ -175,7 +175,7 @@ const startServer = async () => {
 			port,
 		},
 		() => {
-			Console.log('Server started. Press Ctrl+C to quit')
+			console.log(`Server started port ${port}. Press Ctrl+C to quit`)
 			process.send?.('ready')
 		}
 	)
