@@ -97,20 +97,6 @@ const startServer = async () => {
 		// 	})
 		// 	process.exit(0)
 		// })
-	} else if (!serverInfo.isServer) {
-		spawn(
-			'cross-env',
-			[
-				`PORT=1234 NODE_NO_WARNINGS=1 node ${path.resolve(
-					__dirname,
-					'../../config/webpack.serve.config.js'
-				)}`,
-			],
-			{
-				stdio: 'inherit',
-				shell: true,
-			}
-		)
 	}
 }
 
