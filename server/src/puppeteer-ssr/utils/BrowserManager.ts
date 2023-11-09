@@ -31,15 +31,15 @@ export interface IBrowser {
 	isReady: () => boolean
 }
 
+const followResourceWorkerPath = path.resolve(
+	__dirname,
+	`./FollowResource.worker/index.${resourceExtension}`
+)
+
 export const deleteUserDataDir = async (dir: string) => {
 	if (dir) {
 		try {
-			WorkerPool.pool(
-				path.resolve(
-					__dirname,
-					`./FollowResource.worker/index.${resourceExtension}`
-				)
-			)?.exec('deleteResource', [dir])
+			WorkerPool.pool(followResourceWorkerPath)?.exec('deleteResource', [dir])
 		} catch (err) {
 			Console.error(err)
 		}

@@ -48,6 +48,11 @@ const puppeteer = (() => {
 	return require('puppeteer')
 })()
 
+const followResourceWorkerPath = _path2.default.resolve(
+	__dirname,
+	`./FollowResource.worker/index.${_constants.resourceExtension}`
+)
+
 const deleteUserDataDir = async (dir) => {
 	if (dir) {
 		try {
@@ -56,13 +61,7 @@ const deleteUserDataDir = async (dir) => {
 				'access',
 				(_) => _.pool,
 				'call',
-				(_2) =>
-					_2(
-						_path2.default.resolve(
-							__dirname,
-							`./FollowResource.worker/index.${_constants.resourceExtension}`
-						)
-					),
+				(_2) => _2(followResourceWorkerPath),
 				'optionalAccess',
 				(_3) => _3.exec,
 				'call',
