@@ -1,19 +1,16 @@
 import { Page } from 'puppeteer-core'
-import WorkerPool from 'workerpool'
-import { SERVER_LESS, resourceExtension, userDataPath } from '../../constants'
+import { ENV, userDataPath } from '../../constants'
 import Console from '../../utils/ConsoleHandler'
 import {
 	BANDWIDTH_LEVEL,
 	BANDWIDTH_LEVEL_LIST,
 	CACHEABLE_STATUS_CODE,
 	DURATION_TIMEOUT,
-	MAX_WORKERS,
 	POWER_LEVEL,
 	POWER_LEVEL_LIST,
 	regexNotFoundPageID,
 	regexQueryStringSpecialInfo,
 } from '../constants'
-import { ENV } from '../../constants'
 import { ISSRResult } from '../types'
 import BrowserManager, { IBrowser } from './BrowserManager'
 import CacheManager from './CacheManager'

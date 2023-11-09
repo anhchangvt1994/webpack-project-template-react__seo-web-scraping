@@ -31,7 +31,6 @@ function _optionalChain(ops) {
 	}
 	return value
 }
-
 var _constants = require('../../constants')
 var _ConsoleHandler = require('../../utils/ConsoleHandler')
 var _ConsoleHandler2 = _interopRequireDefault(_ConsoleHandler)

@@ -2,7 +2,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { findFreePort, getPort, setPort } from '../../config/utils/PortHandler'
-import { pagesPath } from './constants'
+import { pagesPath, serverInfo } from './constants'
 import puppeteerSSRService from './puppeteer-ssr/index.uws'
 
 require('events').EventEmitter.setMaxListeners(200)
@@ -96,6 +96,15 @@ const startServer = async () => {
 		// 	})
 		// 	process.exit(0)
 		// })
+	} else if (!serverInfo.isServer) {
+		spawn(
+			'cross-env',
+			['PORT=1234 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js'],
+			{
+				stdio: 'inherit',
+				shell: true,
+			}
+		)
 	}
 }
 

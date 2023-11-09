@@ -143,6 +143,16 @@ const startServer = async () => {
 		// 	})
 		// 	process.exit(0)
 		// })
+	} else if (!_constants.serverInfo.isServer) {
+		_child_process.spawn.call(
+			void 0,
+			'cross-env',
+			['PORT=1234 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js'],
+			{
+				stdio: 'inherit',
+				shell: true,
+			}
+		)
 	}
 }
 

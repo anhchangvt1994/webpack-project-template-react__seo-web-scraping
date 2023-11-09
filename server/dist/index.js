@@ -31,7 +31,6 @@ function _optionalChain(ops) {
 	return value
 }
 var _child_process = require('child_process')
-
 var _cors = require('cors')
 var _cors2 = _interopRequireDefault(_cors)
 var _express = require('express')
@@ -45,7 +44,6 @@ var _puppeteerssr2 = _interopRequireDefault(_puppeteerssr)
 var _constants3 = require('./puppeteer-ssr/constants')
 var _serverconfig = require('./server.config')
 var _serverconfig2 = _interopRequireDefault(_serverconfig)
-
 var _CookieHandler = require('./utils/CookieHandler')
 var _DetectBot = require('./utils/DetectBot')
 var _DetectBot2 = _interopRequireDefault(_DetectBot)
@@ -287,6 +285,16 @@ const startServer = async () => {
 		// 	)
 		// 	process.exit(0)
 		// })
+	} else if (!_constants.serverInfo.isServer) {
+		_child_process.spawn.call(
+			void 0,
+			'cross-env',
+			['PORT=1234 NODE_NO_WARNINGS=1 node ./config/webpack.serve.config.js'],
+			{
+				stdio: 'inherit',
+				shell: true,
+			}
+		)
 	}
 }
 
