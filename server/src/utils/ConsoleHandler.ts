@@ -26,7 +26,7 @@ export interface IConsole {
 }
 
 const Console = (() => {
-	if (ENV !== 'production') {
+	if (ENV !== 'staging') {
 		const consoleFormatted = {}
 		for (const key in console) {
 			consoleFormatted[key] = () => {}
