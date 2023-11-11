@@ -1,5 +1,10 @@
+import LoadingPageComponent from 'components/LoadingPageComponent'
 import { ServerStore } from 'store/ServerStore'
 import { resetSeoTag } from 'utils/SeoHelper'
+import {
+	INIT_LOADING_INFO,
+	useLoadingInfo,
+} from '../context/LoadingInfoContext'
 
 interface IFetchOnRouteResponse {
 	originPath: string
@@ -21,10 +26,6 @@ const fetchOnRoute = (() => {
 		controller = new AbortController()
 
 		const data = await new Promise(async (res) => {
-			setTimeout(() => {
-				// controller?.abort('reject')
-				res(null)
-			}, 1000)
 			const response = await fetch(path, {
 				...init,
 				signal: controller.signal,
@@ -58,6 +59,7 @@ const validPathListCached = new Map<
 export default function ServerRouterHandler({ children }) {
 	const location = useLocation()
 	const { locale } = useParams()
+	const { setLoadingState } = useLoadingInfo()
 	const localeContext = useLocaleInfo()
 	const [element, setElement] = useState<JSX.Element>()
 	const enableLocale = useMemo(
@@ -86,6 +88,10 @@ export default function ServerRouterHandler({ children }) {
 		})()
 
 		if (!BotInfo.isBot && !validPathInfo) {
+			setLoadingState({
+				isShow: true,
+				element: <LoadingPageComponent />,
+			})
 			// console.log('fetch')
 			const fullPath = `${location.pathname}${
 				location.search
@@ -99,6 +105,7 @@ export default function ServerRouterHandler({ children }) {
 					Accept: 'application/json',
 				}),
 			}).then((res) => {
+				// setLoadingState(INIT_LOADING_INFO)
 				// NOTE - Handle pre-render for bot with locale options turned on
 
 				if (enableLocale) {
@@ -160,6 +167,8 @@ export default function ServerRouterHandler({ children }) {
 					resetSeoTag()
 					setElement(children)
 				}
+
+				setLoadingState(INIT_LOADING_INFO)
 			})
 		} else if (
 			enableLocale &&

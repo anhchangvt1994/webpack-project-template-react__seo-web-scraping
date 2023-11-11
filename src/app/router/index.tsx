@@ -10,6 +10,7 @@ import RouterValidation from './utils/RouterValidation'
 import ServerRouterHandler from './utils/ServerRouterHandler'
 import { ServerStore } from 'store/ServerStore'
 import { LocaleInfoProvider } from './context/LocaleInfoContext'
+import { LoadingInfoProvider } from './context/LoadingInfoContext'
 
 ServerStore.init()
 
@@ -22,21 +23,23 @@ const routes: RouteObjectCustomize[] = [
 	{
 		path: import.meta.env.ROUTER_BASE_PATH,
 		element: (
-			<LocaleInfoProvider>
-				<ServerRouterHandler>
-					<RouterInit>
-						<RouterValidation NotFoundPage={NotFoundPage}>
-							<RouterDeliver>
-								<RouterProtection
-									WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
-								>
-									<Layout />
-								</RouterProtection>
-							</RouterDeliver>
-						</RouterValidation>
-					</RouterInit>
-				</ServerRouterHandler>
-			</LocaleInfoProvider>
+			<LoadingInfoProvider>
+				<LocaleInfoProvider>
+					<ServerRouterHandler>
+						<RouterInit>
+							<RouterValidation NotFoundPage={NotFoundPage}>
+								<RouterDeliver>
+									<RouterProtection
+										WatingVerifyRouterIDList={WAITING_VERIFY_ROUTER_ID_LIST}
+									>
+										<Layout />
+									</RouterProtection>
+								</RouterDeliver>
+							</RouterValidation>
+						</RouterInit>
+					</ServerRouterHandler>
+				</LocaleInfoProvider>
+			</LoadingInfoProvider>
 		),
 		children: [
 			{
