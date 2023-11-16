@@ -35,65 +35,84 @@ const getRestOfDuration = (startGenerating, gapDuration = 0) => {
 } // getRestOfDuration
 
 const waitResponse = async (page: Page, url: string, duration: number) => {
-	const timeoutDuration = (() => {
-		const maxDuration =
-			BANDWIDTH_LEVEL === BANDWIDTH_LEVEL_LIST.TWO ? 2000 : DURATION_TIMEOUT
+	// const timeoutDuration = (() => {
+	// 	const maxDuration =
+	// 		BANDWIDTH_LEVEL === BANDWIDTH_LEVEL_LIST.TWO ? 2000 : DURATION_TIMEOUT
 
-		return duration > maxDuration ? maxDuration : duration
-	})()
-	const startWaiting = Date.now()
+	// 	return duration > maxDuration ? maxDuration : duration
+	// })()
+	// const startWaiting = Date.now()
 	let response
 	try {
-		response = await page.goto(url.split('?')[0], {
-			waitUntil: 'networkidle2',
-			timeout: timeoutDuration,
+		response = await new Promise(async (resolve) => {
+			const result = await new Promise<any>((resolveAfterPageLoad) => {
+				page
+					.goto(url.split('?')[0])
+					.then((res) => {
+						setTimeout(() => resolveAfterPageLoad(res), 500)
+					})
+					.catch((err) => {
+						throw err
+					})
+			})
+
+			const html = await page.content()
+
+			if (regexNotFoundPageID.test(html)) return resolve(result)
+
+			await page.goto(url.split('?')[0], {
+				waitUntil: 'networkidle2',
+				timeout: duration,
+			})
+
+			resolve(result)
 		})
 	} catch (err) {
 		throw err
 	}
 
-	const waitingDuration = Date.now() - startWaiting
-	const restOfDuration = timeoutDuration - waitingDuration
+	// const waitingDuration = Date.now() - startWaiting
+	// const restOfDuration = timeoutDuration - waitingDuration
 
-	if (restOfDuration <= 0) return response
+	// if (restOfDuration <= 0) return response
 
-	await new Promise((res) => {
-		let duration = ENV === 'development' ? 3000 : 250
-		const maxLimitTimeout = restOfDuration > 3000 ? 3000 : restOfDuration
-		let limitTimeout = setTimeout(
-			() => {
-				if (responseTimeout) clearTimeout(responseTimeout)
-				res(undefined)
-			},
-			ENV === 'development'
-				? 10000
-				: restOfDuration > maxLimitTimeout
-				? maxLimitTimeout
-				: restOfDuration
-		)
-		let responseTimeout: NodeJS.Timeout
-		const handleTimeout = () => {
-			if (responseTimeout) clearTimeout(responseTimeout)
-			responseTimeout = setTimeout(() => {
-				if (limitTimeout) clearTimeout(limitTimeout)
-				res(undefined)
-			}, duration)
+	// await new Promise((res) => {
+	// 	let duration = ENV === 'development' ? 3000 : 250
+	// 	const maxLimitTimeout = restOfDuration > 3000 ? 3000 : restOfDuration
+	// 	let limitTimeout = setTimeout(
+	// 		() => {
+	// 			if (responseTimeout) clearTimeout(responseTimeout)
+	// 			res(undefined)
+	// 		},
+	// 		ENV === 'development'
+	// 			? 10000
+	// 			: restOfDuration > maxLimitTimeout
+	// 			? maxLimitTimeout
+	// 			: restOfDuration
+	// 	)
+	// 	let responseTimeout: NodeJS.Timeout
+	// 	const handleTimeout = () => {
+	// 		if (responseTimeout) clearTimeout(responseTimeout)
+	// 		responseTimeout = setTimeout(() => {
+	// 			if (limitTimeout) clearTimeout(limitTimeout)
+	// 			res(undefined)
+	// 		}, duration)
 
-			duration = ENV === 'development' ? 3000 : 150
-		}
+	// 		duration = ENV === 'development' ? 3000 : 150
+	// 	}
 
-		handleTimeout()
+	// 	handleTimeout()
 
-		page.on('requestfinished', () => {
-			handleTimeout()
-		})
-		page.on('requestservedfromcache', () => {
-			handleTimeout()
-		})
-		page.on('requestfailed', () => {
-			handleTimeout()
-		})
-	})
+	// 	page.on('requestfinished', () => {
+	// 		handleTimeout()
+	// 	})
+	// 	page.on('requestservedfromcache', () => {
+	// 		handleTimeout()
+	// 	})
+	// 	page.on('requestfailed', () => {
+	// 		handleTimeout()
+	// 	})
+	// })
 
 	return response
 } // waitResponse
@@ -201,7 +220,7 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 			await cacheManager.remove(url)
 			return {
 				status,
-				html,
+				html: status === 404 ? 'Page not found!' : html,
 			}
 		}
 	}

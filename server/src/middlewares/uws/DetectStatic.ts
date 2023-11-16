@@ -29,9 +29,9 @@ const DetectStaticMiddle = (res: HttpResponse, req: HttpRequest): Boolean => {
 			res.writeStatus('404')
 			res.end('File not found')
 		}
-	}
 
-	return isStatic
+		res.writableEnded = true
+	}
 }
 
 export default DetectStaticMiddle

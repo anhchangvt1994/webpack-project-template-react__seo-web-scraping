@@ -35,10 +35,16 @@ const cleanResourceWithCondition = async () => {
 
 const startServer = async () => {
 	await cleanResourceWithCondition()
-	let port = process.env.PORT || getPort('PUPPETEER_SSR_PORT')
+	let port =
+		ENV !== 'development'
+			? process.env.PORT || getPort('PUPPETEER_SSR_PORT')
+			: getPort('PUPPETEER_SSR_PORT')
 	port = await findFreePort(port || process.env.PUPPETEER_SSR_PORT || 8080)
-	process.env.PORT = port
 	setPort(port, 'PUPPETEER_SSR_PORT')
+
+	if (ENV !== 'development') {
+		process.env.PORT = port
+	}
 
 	const app = express()
 	const server = require('http').createServer(app)

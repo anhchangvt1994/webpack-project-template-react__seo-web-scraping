@@ -59,8 +59,8 @@ const validPathListCached = new Map<
 export default function ServerRouterHandler({ children }) {
 	const location = useLocation()
 	const { locale } = useParams()
-	const { setLoadingState } = useLoadingInfo()
-	const localeContext = useLocaleInfo()
+	const { loadingState, setLoadingState } = useLoadingInfo()
+	const { setLocaleState } = useLocaleInfo()
 	const [element, setElement] = useState<JSX.Element>()
 	const enableLocale = useMemo(
 		() => Boolean(LocaleInfo.langSelected || LocaleInfo.countrySelected),
@@ -111,16 +111,20 @@ export default function ServerRouterHandler({ children }) {
 				if (enableLocale) {
 					ServerStore.reInit.LocaleInfo()
 
-					localeContext.setLocaleState({
+					setLocaleState({
 						lang: LocaleInfo.langSelected,
 						country: LocaleInfo.countrySelected,
 					})
 				}
 
 				if (res) {
+					const curLocale = getLocale(
+						LocaleInfo.langSelected,
+						LocaleInfo.countrySelected
+					)
 					if (
 						REDIRECT_CODE_LIST.includes(res.status) ||
-						(SUCCESS_CODE_LIST.includes(res.status) && locale)
+						(SUCCESS_CODE_LIST.includes(res.status) && locale === curLocale)
 					) {
 						if (
 							!(location.search && res.search) ||
@@ -188,16 +192,14 @@ export default function ServerRouterHandler({ children }) {
 						LocaleInfo.defaultLang ? arrLocale[1] : arrLocale[0]
 					)
 
-				if (cookies) {
-					const objCookies = JSON.parse(cookies)
-					objCookies.langSelected = getCookie('lang')
-					objCookies.countrySelected = getCookie('country')
-					setCookie('LocaleInfo', JSON.stringify(objCookies))
-				}
+				const objCookies = cookies ? JSON.parse(cookies) : LocaleInfo
+				objCookies.langSelected = getCookie('lang')
+				objCookies.countrySelected = getCookie('country')
+				setCookie('LocaleInfo', JSON.stringify(objCookies))
 
 				ServerStore.reInit.LocaleInfo()
 
-				localeContext.setLocaleState({
+				setLocaleState({
 					lang: LocaleInfo.langSelected,
 					country: LocaleInfo.countrySelected,
 				})
@@ -233,5 +235,5 @@ export default function ServerRouterHandler({ children }) {
 		prevPath = location.pathname
 	}, [location.pathname])
 
-	return element
+	return (loadingState.isShow && loadingState.element) || element
 }

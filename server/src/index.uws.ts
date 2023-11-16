@@ -2,7 +2,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { findFreePort, getPort, setPort } from '../../config/utils/PortHandler'
-import { pagesPath, serverInfo } from './constants'
+import { ENV, pagesPath, serverInfo } from './constants'
 import puppeteerSSRService from './puppeteer-ssr/index.uws'
 
 require('events').EventEmitter.setMaxListeners(200)
@@ -24,10 +24,16 @@ const cleanResourceWithCondition = async () => {
 
 const startServer = async () => {
 	await cleanResourceWithCondition()
-	let port = process.env.PORT || getPort('PUPPETEER_SSR_PORT')
+	let port =
+		ENV !== 'development'
+			? process.env.PORT || getPort('PUPPETEER_SSR_PORT')
+			: getPort('PUPPETEER_SSR_PORT')
 	port = await findFreePort(port || process.env.PUPPETEER_SSR_PORT || 8080)
-	process.env.PORT = port
 	setPort(port, 'PUPPETEER_SSR_PORT')
+
+	if (ENV !== 'development') {
+		process.env.PORT = port
+	}
 
 	const app = require('uWebSockets.js')./*SSL*/ App({
 		key_file_name: 'misc/key.pem',

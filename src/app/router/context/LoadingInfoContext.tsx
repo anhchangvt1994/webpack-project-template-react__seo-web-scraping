@@ -32,7 +32,7 @@ export function LoadingInfoProvider({ children }) {
 				setLoadingState,
 			}}
 		>
-			{(loadingState.isShow && loadingState.element) || children}
+			{children}
 		</LoadingInfoContext.Provider>
 	)
 } // LoadingInfoProvider

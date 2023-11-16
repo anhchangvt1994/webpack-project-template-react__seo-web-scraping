@@ -95,7 +95,9 @@ const MAX_WORKERS = process.env.MAX_WORKERS
 	? Number(process.env.MAX_WORKERS)
 	: 7
 exports.MAX_WORKERS = MAX_WORKERS
-const DURATION_TIMEOUT = process.env.DURATION_TIMEOUT
+const DURATION_TIMEOUT = _constants.SERVER_LESS
+	? 5000
+	: process.env.DURATION_TIMEOUT
 	? Number(process.env.DURATION_TIMEOUT)
 	: 20000
 exports.DURATION_TIMEOUT = DURATION_TIMEOUT

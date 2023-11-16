@@ -43,9 +43,9 @@ const DetectStaticMiddle = (res, req) => {
 			res.writeStatus('404')
 			res.end('File not found')
 		}
-	}
 
-	return isStatic
+		res.writableEnded = true
+	}
 }
 
 exports.default = DetectStaticMiddle

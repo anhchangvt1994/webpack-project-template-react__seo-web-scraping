@@ -1,5 +1,5 @@
 import { PuppeteerLaunchOptions } from 'puppeteer-core'
-import { ENV, userDataPath } from '../constants'
+import { ENV, SERVER_LESS, userDataPath } from '../constants'
 
 // NOTE - Browser Options
 export const optionArgs = [
@@ -85,7 +85,9 @@ export const regexQueryStringSpecialInfo =
 export const MAX_WORKERS = process.env.MAX_WORKERS
 	? Number(process.env.MAX_WORKERS)
 	: 7
-export const DURATION_TIMEOUT = process.env.DURATION_TIMEOUT
+export const DURATION_TIMEOUT = SERVER_LESS
+	? 5000
+	: process.env.DURATION_TIMEOUT
 	? Number(process.env.DURATION_TIMEOUT)
 	: 20000
 export const POWER_LEVEL = process.env.POWER_LEVEL
