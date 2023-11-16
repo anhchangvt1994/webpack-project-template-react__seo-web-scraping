@@ -46,10 +46,10 @@ const optionArgs = [
 	'--no-default-browser-check',
 	'--no-pings',
 	'--password-store=basic',
-	// '--use-gl=swiftshader',
+	'--use-gl=swiftshader',
 	'--use-mock-keychain',
-	'--use-gl=angle',
-	'--use-angle=gl-egl',
+	// '--use-gl=angle',
+	// '--use-angle=gl-egl',
 ]
 exports.optionArgs = optionArgs
 
