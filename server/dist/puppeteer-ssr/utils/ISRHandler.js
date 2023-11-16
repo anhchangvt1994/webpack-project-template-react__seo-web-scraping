@@ -73,9 +73,14 @@ const waitResponse = async (page, url, duration) => {
 		response = await new Promise(async (resolve) => {
 			const result = await new Promise((resolveAfterPageLoad) => {
 				page
-					.goto(url.split('?')[0])
+					.goto(url.split('?')[0], {
+						waitUntil: 'domcontentloaded',
+					})
 					.then((res) => {
-						setTimeout(() => resolveAfterPageLoad(res), 150)
+						setTimeout(
+							() => resolveAfterPageLoad(res),
+							_constants3.BANDWIDTH_LEVEL > 1 ? 250 : 500
+						)
 					})
 					.catch((err) => {
 						throw err
@@ -92,61 +97,35 @@ const waitResponse = async (page, url, duration) => {
 			// })
 			// await page.goto(url.split('?')[0])
 
-			await new Promise((resolveAfterPageLoadInFewSecond) =>
-				setTimeout(
-					resolveAfterPageLoadInFewSecond,
-					_constants3.BANDWIDTH_LEVEL > 1 ? 1000 : 3000
-				)
-			)
+			await new Promise((resolveAfterPageLoadInFewSecond) => {
+				const startTimeout = (() => {
+					let timeout
+					return (duration = _constants3.BANDWIDTH_LEVEL > 1 ? 200 : 500) => {
+						if (timeout) clearTimeout(timeout)
+						timeout = setTimeout(resolveAfterPageLoadInFewSecond, duration)
+					}
+				})()
+
+				startTimeout()
+
+				page.on('requestfinished', () => {
+					startTimeout()
+				})
+				page.on('requestservedfromcache', () => {
+					startTimeout()
+				})
+				page.on('requestfailed', () => {
+					startTimeout()
+				})
+
+				setTimeout(resolveAfterPageLoadInFewSecond, 5000)
+			})
 
 			resolve(result)
 		})
 	} catch (err) {
 		throw err
 	}
-
-	// const waitingDuration = Date.now() - startWaiting
-	// const restOfDuration = timeoutDuration - waitingDuration
-
-	// if (restOfDuration <= 0) return response
-
-	// await new Promise((res) => {
-	// 	let duration = ENV === 'development' ? 3000 : 250
-	// 	const maxLimitTimeout = restOfDuration > 3000 ? 3000 : restOfDuration
-	// 	let limitTimeout = setTimeout(
-	// 		() => {
-	// 			if (responseTimeout) clearTimeout(responseTimeout)
-	// 			res(undefined)
-	// 		},
-	// 		ENV === 'development'
-	// 			? 10000
-	// 			: restOfDuration > maxLimitTimeout
-	// 			? maxLimitTimeout
-	// 			: restOfDuration
-	// 	)
-	// 	let responseTimeout: NodeJS.Timeout
-	// 	const handleTimeout = () => {
-	// 		if (responseTimeout) clearTimeout(responseTimeout)
-	// 		responseTimeout = setTimeout(() => {
-	// 			if (limitTimeout) clearTimeout(limitTimeout)
-	// 			res(undefined)
-	// 		}, duration)
-
-	// 		duration = ENV === 'development' ? 3000 : 150
-	// 	}
-
-	// 	handleTimeout()
-
-	// 	page.on('requestfinished', () => {
-	// 		handleTimeout()
-	// 	})
-	// 	page.on('requestservedfromcache', () => {
-	// 		handleTimeout()
-	// 	})
-	// 	page.on('requestfailed', () => {
-	// 		handleTimeout()
-	// 	})
-	// })
 
 	return response
 } // waitResponse
