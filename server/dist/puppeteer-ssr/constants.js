@@ -7,7 +7,7 @@ const optionArgs = [
 	'--no-sandbox',
 	'--disable-setuid-sandbox',
 	'--headless',
-	'--disable-gpu',
+	// '--disable-gpu',
 	'--disable-software-rasterizer',
 	'--hide-scrollbars',
 	'--disable-translate',

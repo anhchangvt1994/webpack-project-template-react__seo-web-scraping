@@ -49,7 +49,7 @@ const waitResponse = async (page: Page, url: string, duration: number) => {
 				page
 					.goto(url.split('?')[0])
 					.then((res) => {
-						setTimeout(() => resolveAfterPageLoad(res), 500)
+						setTimeout(() => resolveAfterPageLoad(res), 150)
 					})
 					.catch((err) => {
 						throw err
@@ -60,10 +60,15 @@ const waitResponse = async (page: Page, url: string, duration: number) => {
 
 			if (regexNotFoundPageID.test(html)) return resolve(result)
 
-			await page.goto(url.split('?')[0], {
-				waitUntil: 'networkidle2',
-				timeout: duration,
-			})
+			// await page.goto(url.split('?')[0], {
+			// 	waitUntil: 'networkidle2',
+			// 	timeout: 2000,
+			// })
+			// await page.goto(url.split('?')[0])
+
+			await new Promise((resolveAfterPageLoadInFewSecond) =>
+				setTimeout(resolveAfterPageLoadInFewSecond, 1000)
+			)
 
 			resolve(result)
 		})
@@ -148,7 +153,7 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 	let isGetHtmlProcessError = false
 
 	try {
-		// await page.waitForNetworkIdle({ idleTime: 250 })
+		await page.waitForNetworkIdle({ idleTime: 150 })
 		await page.setRequestInterception(true)
 		page.on('request', (req) => {
 			const resourceType = req.resourceType()
