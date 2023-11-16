@@ -95,7 +95,7 @@ const waitResponse = async (page, url, duration) => {
 			await new Promise((resolveAfterPageLoadInFewSecond) =>
 				setTimeout(
 					resolveAfterPageLoadInFewSecond,
-					_constants3.BANDWIDTH_LEVEL > 1 ? 1000 : 5000
+					_constants3.BANDWIDTH_LEVEL > 1 ? 1000 : 3000
 				)
 			)
 
