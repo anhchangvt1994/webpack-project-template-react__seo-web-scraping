@@ -93,7 +93,10 @@ const waitResponse = async (page, url, duration) => {
 			// await page.goto(url.split('?')[0])
 
 			await new Promise((resolveAfterPageLoadInFewSecond) =>
-				setTimeout(resolveAfterPageLoadInFewSecond, 1000)
+				setTimeout(
+					resolveAfterPageLoadInFewSecond,
+					_constants3.BANDWIDTH_LEVEL > 1 ? 1000 : 5000
+				)
 			)
 
 			resolve(result)
