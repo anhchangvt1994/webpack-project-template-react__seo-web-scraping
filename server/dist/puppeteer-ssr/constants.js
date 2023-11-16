@@ -19,12 +19,8 @@ const optionArgs = [
 	'--ignore-certificate-errors',
 	'--ignore-certificate-errors-spki-list ',
 	'--disable-features=IsolateOrigins,SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure',
-	// '--disable-site-isolation-trials',
 	'--no-zygote',
-	// '--use-gl=desktop',
 	'--disable-accelerated-2d-canvas',
-	// '--disable-features=site-per-process',
-	// '--disable-infobars',
 	'--disable-speech-api', // 	Disables the Web Speech API (both speech recognition and synthesis)
 	'--disable-background-networking', // Disable several subsystems which run network requests in the background. This is for use 									  // when doing network performance testing to avoid noise in the measurements. ↪
 	'--disable-background-timer-throttling', // Disable task throttling of timer tasks from background pages. ↪
@@ -50,8 +46,10 @@ const optionArgs = [
 	'--no-default-browser-check',
 	'--no-pings',
 	'--password-store=basic',
-	'--use-gl=swiftshader',
+	// '--use-gl=swiftshader',
 	'--use-mock-keychain',
+	'--use-gl=angle',
+	'--use-angle=gl-egl',
 ]
 exports.optionArgs = optionArgs
 

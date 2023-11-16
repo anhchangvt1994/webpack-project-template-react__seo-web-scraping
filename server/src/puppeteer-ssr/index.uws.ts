@@ -216,7 +216,8 @@ const puppeteerSSRService = (async () => {
 					} catch (err) {
 						Console.error('url', url)
 						Console.error(err)
-						res.writeStatus('500').end('Server Error!', true)
+						// NOTE - Error: uWS.HttpResponse must not be accessed after uWS.HttpResponse.onAborted callback, or after a successful response. See documentation for uWS.HttpResponse and consult the user manual.
+						// res.writeStatus('500').end('Server Error!', true)
 					}
 
 					res.writableEnded = true
