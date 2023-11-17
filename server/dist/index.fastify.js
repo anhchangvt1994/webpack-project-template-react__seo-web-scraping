@@ -216,10 +216,7 @@ const startServer = async () => {
 
 			if (redirectResult.status !== 200) {
 				if (req.headers.accept === 'application/json') {
-					req.url = redirectResult.path
-					res
-						.setHeader('Cache-Control', 'no-store')
-						.end(JSON.stringify(redirectResult))
+					req.headers['redirect'] = JSON.stringify(redirectResult)
 				} else {
 					if (redirectResult.path.length > 1)
 						redirectResult.path = redirectResult.path.replace(
@@ -234,7 +231,8 @@ const startServer = async () => {
 					})
 					return res.end()
 				}
-			} else next()
+			}
+			next()
 		})
 		.use(function (req, res, next) {
 			let deviceInfo

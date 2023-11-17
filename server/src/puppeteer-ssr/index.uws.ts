@@ -105,6 +105,8 @@ const puppeteerSSRService = (async () => {
 			DetectBotMiddle(res, req)
 			DetectLocaleMiddle(res, req)
 
+			const botInfo: IBotInfo = res.cookies?.botInfo
+
 			// NOTE - Check redirect or not
 			const isRedirect = DetectRedirectMiddle(res, req)
 
@@ -114,7 +116,7 @@ const puppeteerSSRService = (async () => {
 			 * When we request by enter first request, redirect will checked and will redirect immediately in server. But when we change router in client side, the request will be a extra fetch from client to server to check redirect information, in this case redirect will run in client not server and won't any request call to server after client run redirect. So we need crawl page in server in the first fetch request that client call to server (if header.accept is 'application/json' then it's fetch request from client)
 			 */
 			if (
-				res.writableEnded ||
+				(res.writableEnded && botInfo.isBot) ||
 				(isRedirect && req.getHeader('accept') !== 'application/json')
 			)
 				return
@@ -122,7 +124,6 @@ const puppeteerSSRService = (async () => {
 			// NOTE - Detect DeviceInfo
 			DetectDeviceMiddle(res, req)
 
-			const botInfo: IBotInfo = res.cookies?.botInfo
 			const enableISR =
 				ServerConfig.isr.enable &&
 				Boolean(
