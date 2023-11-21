@@ -157,21 +157,17 @@ const defineServerConfig = (options) => {
 				}
 			} else serverConfigDefined[key] = _constants3.defaultServerConfig[key]
 		} // isr
-
-		if (key === 'crawler') {
-			serverConfigDefined[key] =
-				_constants.ENV === 'development'
-					? serverConfigDefined[key]
-					: process.env.CRAWLER
-		} // crawler
-
-		if (key === 'crawlerSecretKey') {
-			serverConfigDefined[key] =
-				_constants.ENV === 'development'
-					? serverConfigDefined[key]
-					: process.env.CRAWLER_SECRET_KEY
-		} // crawler secret key
 	}
+
+	serverConfigDefined.crawler =
+		_constants.ENV === 'development'
+			? serverConfigDefined.crawler
+			: process.env.CRAWLER
+
+	serverConfigDefined.crawlerSecretKey =
+		_constants.ENV === 'development'
+			? serverConfigDefined.crawlerSecretKey
+			: process.env.CRAWLER_SECRET_KEY
 
 	return serverConfigDefined
 }

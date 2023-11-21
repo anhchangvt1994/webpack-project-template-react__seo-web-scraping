@@ -72,19 +72,15 @@ export const defineServerConfig = (options: IServerConfigOptional) => {
 				}
 			} else serverConfigDefined[key] = defaultServerConfig[key]
 		} // isr
-
-		if (key === 'crawler') {
-			serverConfigDefined[key] =
-				ENV === 'development' ? serverConfigDefined[key] : process.env.CRAWLER
-		} // crawler
-
-		if (key === 'crawlerSecretKey') {
-			serverConfigDefined[key] =
-				ENV === 'development'
-					? serverConfigDefined[key]
-					: process.env.CRAWLER_SECRET_KEY
-		} // crawler secret key
 	}
+
+	serverConfigDefined.crawler =
+		ENV === 'development' ? serverConfigDefined.crawler : process.env.CRAWLER
+
+	serverConfigDefined.crawlerSecretKey =
+		ENV === 'development'
+			? serverConfigDefined.crawlerSecretKey
+			: process.env.CRAWLER_SECRET_KEY
 
 	return serverConfigDefined as IServerConfig
 }
