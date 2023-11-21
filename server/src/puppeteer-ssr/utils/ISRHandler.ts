@@ -172,6 +172,7 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 				{
 					startGenerating,
 					isFirstRequest: true,
+					crawlerSecretKey: ServerConfig.crawlerSecretKey,
 					url,
 				}
 			)
