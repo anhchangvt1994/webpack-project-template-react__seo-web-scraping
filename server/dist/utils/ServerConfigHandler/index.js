@@ -28,12 +28,13 @@ function _optionalChain(ops) {
 	}
 	return value
 }
-var _constants = require('./constants')
+var _constants = require('../../constants')
+var _constants3 = require('./constants')
 
 const defineServerConfig = (options) => {
-	const serverConfigDefined = {}
+	const serverConfigDefined = { ...options }
 
-	for (const key in _constants.defaultServerConfig) {
+	for (const key in _constants3.defaultServerConfig) {
 		if (key === 'locale') {
 			if (options[key]) {
 				serverConfigDefined[key] = {
@@ -71,7 +72,7 @@ const defineServerConfig = (options) => {
 							(_8) => _8.hideDefaultLocale,
 						]),
 					}
-			} else serverConfigDefined[key] = _constants.defaultServerConfig[key]
+			} else serverConfigDefined[key] = _constants3.defaultServerConfig[key]
 
 			const routes = _optionalChain([
 				options,
@@ -82,20 +83,20 @@ const defineServerConfig = (options) => {
 			])
 
 			if (routes) {
-				serverConfigDefined[key].routes = {}
+				let tmpRoutes = (serverConfigDefined[key].routes = {})
 
 				for (const localeRouteKey in routes) {
 					if (routes[localeRouteKey]) {
-						serverConfigDefined[key].routes[localeRouteKey] = {
+						tmpRoutes[localeRouteKey] = {
 							enable:
 								routes[localeRouteKey] && routes[localeRouteKey].enable
 									? true
 									: false,
 						}
 
-						if (serverConfigDefined[key].routes[localeRouteKey].enable)
-							serverConfigDefined[key].routes[localeRouteKey] = {
-								...serverConfigDefined[key].routes[localeRouteKey],
+						if (tmpRoutes[localeRouteKey].enable)
+							tmpRoutes[localeRouteKey] = {
+								...tmpRoutes[localeRouteKey],
 								defaultLang: _optionalChain([
 									routes,
 									'access',
@@ -121,7 +122,7 @@ const defineServerConfig = (options) => {
 									() => true
 								),
 							}
-					} else serverConfigDefined[key].routes[localeRouteKey] = true
+					} else tmpRoutes[localeRouteKey] = true
 				}
 			}
 		} // locale
@@ -154,8 +155,22 @@ const defineServerConfig = (options) => {
 						} else serverConfigDefined[key].routes[localeRouteKey] = true
 					}
 				}
-			} else serverConfigDefined[key] = _constants.defaultServerConfig[key]
+			} else serverConfigDefined[key] = _constants3.defaultServerConfig[key]
 		} // isr
+
+		if (key === 'crawler') {
+			serverConfigDefined[key] =
+				_constants.ENV === 'development'
+					? serverConfigDefined[key]
+					: process.env.CRAWLER
+		} // crawler
+
+		if (key === 'crawlerSecretKey') {
+			serverConfigDefined[key] =
+				_constants.ENV === 'development'
+					? serverConfigDefined[key]
+					: process.env.CRAWLER_SECRET_KEY
+		} // crawler secret key
 	}
 
 	return serverConfigDefined

@@ -14,6 +14,7 @@ import {
 import { ISSRResult } from '../types'
 import BrowserManager, { IBrowser } from './BrowserManager'
 import CacheManager from './CacheManager'
+import ServerConfig from '../../server.config'
 
 const browserManager = (() => {
 	if (ENV === 'development') return undefined as unknown as IBrowser
@@ -33,6 +34,40 @@ const getRestOfDuration = (startGenerating, gapDuration = 0) => {
 
 	return DURATION_TIMEOUT - gapDuration - (Date.now() - startGenerating)
 } // getRestOfDuration
+
+const fetchData = async (
+	input: RequestInfo | URL,
+	init?: RequestInit | undefined,
+	reqData?: { [key: string]: any }
+) => {
+	try {
+		const params = new URLSearchParams()
+		if (reqData) {
+			for (const key in reqData) {
+				params.append(key, reqData[key])
+			}
+		}
+
+		const response = await fetch(
+			input + (reqData ? `?${params.toString()}` : ''),
+			init
+		).then(async (res) => ({
+			status: res.status,
+			data: await res.text(),
+		}))
+
+		const data = /^{(.|[\r\n])*?}$/.test(response.data)
+			? JSON.parse(response.data)
+			: response.data
+
+		return {
+			...response,
+			data,
+		}
+	} catch (error) {
+		Console.error(error)
+	}
+} // fetchData
 
 const waitResponse = async (page: Page, url: string, duration: number) => {
 	// const timeoutDuration = (() => {
@@ -64,12 +99,6 @@ const waitResponse = async (page: Page, url: string, duration: number) => {
 			const html = await page.content()
 
 			if (regexNotFoundPageID.test(html)) return resolve(result)
-
-			// await page.goto(url.split('?')[0], {
-			// 	waitUntil: 'networkidle2',
-			// 	timeout: 2000,
-			// })
-			// await page.goto(url.split('?')[0])
 
 			await new Promise((resolveAfterPageLoadInFewSecond) => {
 				const startTimeout = (() => {
@@ -114,12 +143,10 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 
 	Console.log('Bắt đầu tạo page mới')
 
-	const page = await browserManager.newPage()
-
 	let restOfDuration = getRestOfDuration(startGenerating, gapDurationDefault)
 
-	if (!page || restOfDuration <= 0) {
-		if (!page && !isFirstRequest) {
+	if (restOfDuration <= 0) {
+		if (!isFirstRequest) {
 			const tmpResult = await cacheManager.achieve(url)
 
 			return tmpResult
@@ -127,92 +154,137 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 		return
 	}
 
-	Console.log('Số giây còn lại là: ', restOfDuration / 1000)
-	Console.log('Tạo page mới thành công')
-
 	let html = ''
 	let status = 200
-	let isGetHtmlProcessError = false
 
-	try {
-		await page.waitForNetworkIdle({ idleTime: 150 })
-		await page.setRequestInterception(true)
-		page.on('request', (req) => {
-			const resourceType = req.resourceType()
-
-			if (resourceType === 'stylesheet') {
-				req.respond({ status: 200, body: 'aborted' })
-			} else if (
-				/(socket.io.min.js)+(?:$)|data:image\/[a-z]*.?\;base64/.test(url) ||
-				/font|image|media|imageset/.test(resourceType)
-			) {
-				req.abort()
-			} else {
-				req.continue()
-			}
-		})
-
-		const specialInfo = regexQueryStringSpecialInfo.exec(url)?.groups ?? {}
-
-		await page.setExtraHTTPHeaders({
-			...specialInfo,
-			service: 'puppeteer',
-		})
-
-		await new Promise(async (res) => {
-			Console.log(`Bắt đầu crawl url: ${url}`)
-
-			let response
-
-			try {
-				response = await waitResponse(page, url, restOfDuration)
-			} catch (err) {
-				if (err.name !== 'TimeoutError') {
-					isGetHtmlProcessError = true
-					res(false)
-					return Console.error(err)
+	if (ServerConfig.crawler) {
+		try {
+			const result = await fetchData(
+				ServerConfig.crawler,
+				{
+					method: 'GET',
+					headers: new Headers({
+						Authorization: 'web-scraping-service',
+						Accept: 'text/html; charset=utf-8',
+						service: 'web-scraping-service',
+					}),
+				},
+				{
+					startGenerating,
+					isFirstRequest: true,
+					url,
 				}
-			} finally {
-				status = response?.status?.() ?? status
-				Console.log('Crawl thành công!')
-				Console.log(`Response status là: ${status}`)
+			)
 
-				res(true)
+			if (result) {
+				status = result.status
+				html = result.data
 			}
-		})
-	} catch (err) {
-		Console.log('Page mới đã bị lỗi')
-		Console.error(err)
-		return
-	}
-
-	if (isGetHtmlProcessError) return
-
-	let result: ISSRResult
-	try {
-		html = await page.content() // serialized HTML of page DOM.
-		await page.close()
-	} catch (err) {
-		Console.error(err)
-		return
-	} finally {
-		status = html && regexNotFoundPageID.test(html) ? 404 : 200
-		if (CACHEABLE_STATUS_CODE[status]) {
-			result = await cacheManager.set({
-				html,
-				url,
-				isRaw: true,
-			})
-		} else {
-			await cacheManager.remove(url)
-			return {
-				status,
-				html: status === 404 ? 'Page not found!' : html,
-			}
+		} catch (err) {
+			Console.log('Page mới đã bị lỗi')
+			Console.error(err)
+			return
 		}
 	}
 
+	if (status === 500) {
+		const page = await browserManager.newPage()
+
+		if (!page) {
+			if (!page && !isFirstRequest) {
+				const tmpResult = await cacheManager.achieve(url)
+
+				return tmpResult
+			}
+			return
+		}
+
+		let isGetHtmlProcessError = false
+
+		try {
+			await page.waitForNetworkIdle({ idleTime: 150 })
+			await page.setRequestInterception(true)
+			page.on('request', (req) => {
+				const resourceType = req.resourceType()
+
+				if (resourceType === 'stylesheet') {
+					req.respond({ status: 200, body: 'aborted' })
+				} else if (
+					/(socket.io.min.js)+(?:$)|data:image\/[a-z]*.?\;base64/.test(url) ||
+					/font|image|media|imageset/.test(resourceType)
+				) {
+					req.abort()
+				} else {
+					req.continue()
+				}
+			})
+
+			const specialInfo = regexQueryStringSpecialInfo.exec(url)?.groups ?? {}
+
+			await page.setExtraHTTPHeaders({
+				...specialInfo,
+				service: 'puppeteer',
+			})
+
+			await new Promise(async (res) => {
+				Console.log(`Bắt đầu crawl url: ${url}`)
+
+				let response
+
+				try {
+					response = await waitResponse(page, url, restOfDuration)
+				} catch (err) {
+					if (err.name !== 'TimeoutError') {
+						isGetHtmlProcessError = true
+						res(false)
+						return Console.error(err)
+					}
+				} finally {
+					status = response?.status?.() ?? status
+					Console.log('Crawl thành công!')
+					Console.log(`Response status là: ${status}`)
+
+					res(true)
+				}
+			})
+		} catch (err) {
+			Console.log('Page mới đã bị lỗi')
+			Console.error(err)
+			return
+		}
+
+		if (isGetHtmlProcessError) return
+
+		try {
+			html = await page.content() // serialized HTML of page DOM.
+			await page.close()
+		} catch (err) {
+			Console.error(err)
+			return
+		}
+
+		status = html && regexNotFoundPageID.test(html) ? 404 : 200
+	}
+
+	Console.log('Số giây còn lại là: ', restOfDuration / 1000)
+	Console.log('Tạo page mới thành công')
+
 	restOfDuration = getRestOfDuration(startGenerating)
+
+	let result: ISSRResult
+	if (CACHEABLE_STATUS_CODE[status]) {
+		result = await cacheManager.set({
+			html,
+			url,
+			isRaw: true,
+		})
+	} else {
+		await cacheManager.remove(url)
+		return {
+			status,
+			html: status === 404 ? 'Page not found!' : html,
+		}
+	}
 
 	return result
 	// Console.log('Bắt đầu optimize nội dung file')
