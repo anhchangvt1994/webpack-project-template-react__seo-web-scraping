@@ -158,6 +158,16 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 	let status = 200
 
 	if (ServerConfig.crawler) {
+		const requestParams = {
+			startGenerating,
+			isFirstRequest: true,
+			url,
+		}
+
+		if (ServerConfig.crawlerSecretKey) {
+			requestParams['crawlerSecretKey'] = ServerConfig.crawlerSecretKey
+		}
+
 		try {
 			const result = await fetchData(
 				ServerConfig.crawler,
@@ -169,12 +179,7 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 						service: 'web-scraping-service',
 					}),
 				},
-				{
-					startGenerating,
-					isFirstRequest: true,
-					crawlerSecretKey: ServerConfig.crawlerSecretKey,
-					url,
-				}
+				requestParams
 			)
 
 			if (result) {
