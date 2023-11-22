@@ -80,7 +80,7 @@ export const defineServerConfig = (options: IServerConfigOptional) => {
 	serverConfigDefined.crawlerSecretKey =
 		ENV === 'development'
 			? serverConfigDefined.crawlerSecretKey
-			: process.env.CRAWLER_SECRET_KEY
+			: process.env.CRAWLER_SECRET_KEY || undefined
 
 	return serverConfigDefined as IServerConfig
 }

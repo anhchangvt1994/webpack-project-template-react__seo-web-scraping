@@ -195,7 +195,6 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 				{
 					method: 'GET',
 					headers: new Headers({
-						Authorization: 'web-scraping-service',
 						Accept: 'text/html; charset=utf-8',
 					}),
 				},
