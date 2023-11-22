@@ -32,6 +32,8 @@ function _optionalChain(ops) {
 	return value
 }
 var _constants = require('../../constants')
+var _serverconfig = require('../../server.config')
+var _serverconfig2 = _interopRequireDefault(_serverconfig)
 var _ConsoleHandler = require('../../utils/ConsoleHandler')
 var _ConsoleHandler2 = _interopRequireDefault(_ConsoleHandler)
 
@@ -41,8 +43,6 @@ var _BrowserManager = require('./BrowserManager')
 var _BrowserManager2 = _interopRequireDefault(_BrowserManager)
 var _CacheManager = require('./CacheManager')
 var _CacheManager2 = _interopRequireDefault(_CacheManager)
-var _serverconfig = require('../../server.config')
-var _serverconfig2 = _interopRequireDefault(_serverconfig)
 
 const browserManager = (() => {
 	if (_constants.ENV === 'development') return undefined
@@ -89,20 +89,17 @@ const fetchData = async (input, init, reqData) => {
 		}
 	} catch (error) {
 		_ConsoleHandler2.default.error(error)
+		return {
+			status: 500,
+			data: '',
+		}
 	}
 } // fetchData
 
 const waitResponse = async (page, url, duration) => {
-	// const timeoutDuration = (() => {
-	// 	const maxDuration =
-	// 		BANDWIDTH_LEVEL === BANDWIDTH_LEVEL_LIST.TWO ? 2000 : DURATION_TIMEOUT
-
-	// 	return duration > maxDuration ? maxDuration : duration
-	// })()
-	// const startWaiting = Date.now()
 	let response
 	try {
-		response = await new Promise(async (resolve) => {
+		response = await new Promise(async (resolve, reject) => {
 			const result = await new Promise((resolveAfterPageLoad) => {
 				page
 					.goto(url.split('?')[0], {
@@ -115,7 +112,7 @@ const waitResponse = async (page, url, duration) => {
 						)
 					})
 					.catch((err) => {
-						throw err
+						reject(err)
 					})
 			})
 
@@ -200,7 +197,6 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 					headers: new Headers({
 						Authorization: 'web-scraping-service',
 						Accept: 'text/html; charset=utf-8',
-						service: 'web-scraping-service',
 					}),
 				},
 				requestParams
@@ -213,11 +209,10 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 		} catch (err) {
 			_ConsoleHandler2.default.log('Page mới đã bị lỗi')
 			_ConsoleHandler2.default.error(err)
-			return
 		}
 	}
 
-	if (status === 500) {
+	if (!_serverconfig2.default.crawler || status === 500) {
 		const page = await browserManager.newPage()
 
 		if (!page) {
@@ -278,6 +273,7 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 					if (err.name !== 'TimeoutError') {
 						isGetHtmlProcessError = true
 						res(false)
+						await page.close()
 						return _ConsoleHandler2.default.error(err)
 					}
 				} finally {
@@ -300,10 +296,16 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 		} catch (err) {
 			_ConsoleHandler2.default.log('Page mới đã bị lỗi')
 			_ConsoleHandler2.default.error(err)
-			return
+			await page.close()
+			return {
+				status: 500,
+			}
 		}
 
-		if (isGetHtmlProcessError) return
+		if (isGetHtmlProcessError)
+			return {
+				status: 500,
+			}
 
 		try {
 			html = await page.content() // serialized HTML of page DOM.
@@ -337,33 +339,6 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 	}
 
 	return result
-	// Console.log('Bắt đầu optimize nội dung file')
-
-	// const optimizeHTMLContentPool = WorkerPool.pool(
-	// 	__dirname + `/OptimizeHtml.worker.${resourceExtension}`,
-	// 	{
-	// 		minWorkers: 1,
-	// 		maxWorkers: MAX_WORKERS,
-	// 	}
-	// )
-
-	// try {
-	// 	html = await optimizeHTMLContentPool.exec('compressContent', [html])
-	// 	html = await optimizeHTMLContentPool.exec('optimizeContent', [html, true])
-	// } catch (err) {
-	// 	Console.error(err)
-	// 	return
-	// } finally {
-	// 	optimizeHTMLContentPool.terminate()
-
-	// 	result = await cacheManager.set({
-	// 		html,
-	// 		url,
-	// 		isRaw: false,
-	// 	})
-
-	// 	return result
-	// }
 }
 
 exports.default = ISRHandler
