@@ -57,17 +57,17 @@ export const defineServerConfig = (options: IServerConfigOptional) => {
 				const routes = options[key]?.routes
 
 				if (routes) {
-					serverConfigDefined[key].routes = {}
+					const tmpRoutes = (serverConfigDefined[key].routes = {})
 
 					for (const localeRouteKey in routes) {
 						if (routes[localeRouteKey]) {
-							serverConfigDefined[key].routes[localeRouteKey] = {
+							tmpRoutes[localeRouteKey] = {
 								enable:
 									routes[localeRouteKey] && routes[localeRouteKey].enable
 										? true
 										: false,
 							}
-						} else serverConfigDefined[key].routes[localeRouteKey] = true
+						} else tmpRoutes[localeRouteKey] = true
 					}
 				}
 			} else serverConfigDefined[key] = defaultServerConfig[key]
@@ -75,7 +75,9 @@ export const defineServerConfig = (options: IServerConfigOptional) => {
 	}
 
 	serverConfigDefined.crawler =
-		ENV === 'development' ? serverConfigDefined.crawler : process.env.CRAWLER
+		ENV === 'development'
+			? serverConfigDefined.crawler
+			: process.env.CRAWLER || serverConfigDefined.crawler
 
 	serverConfigDefined.crawlerSecretKey =
 		ENV === 'development'

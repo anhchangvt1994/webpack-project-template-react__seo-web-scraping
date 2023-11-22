@@ -142,17 +142,17 @@ const defineServerConfig = (options) => {
 				])
 
 				if (routes) {
-					serverConfigDefined[key].routes = {}
+					const tmpRoutes = (serverConfigDefined[key].routes = {})
 
 					for (const localeRouteKey in routes) {
 						if (routes[localeRouteKey]) {
-							serverConfigDefined[key].routes[localeRouteKey] = {
+							tmpRoutes[localeRouteKey] = {
 								enable:
 									routes[localeRouteKey] && routes[localeRouteKey].enable
 										? true
 										: false,
 							}
-						} else serverConfigDefined[key].routes[localeRouteKey] = true
+						} else tmpRoutes[localeRouteKey] = true
 					}
 				}
 			} else serverConfigDefined[key] = _constants3.defaultServerConfig[key]
@@ -162,7 +162,7 @@ const defineServerConfig = (options) => {
 	serverConfigDefined.crawler =
 		_constants.ENV === 'development'
 			? serverConfigDefined.crawler
-			: process.env.CRAWLER
+			: process.env.CRAWLER || serverConfigDefined.crawler
 
 	serverConfigDefined.crawlerSecretKey =
 		_constants.ENV === 'development'

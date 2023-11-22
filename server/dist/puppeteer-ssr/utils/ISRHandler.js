@@ -31,6 +31,8 @@ function _optionalChain(ops) {
 	}
 	return value
 }
+var _workerpool = require('workerpool')
+var _workerpool2 = _interopRequireDefault(_workerpool)
 var _constants = require('../../constants')
 var _serverconfig = require('../../server.config')
 var _serverconfig2 = _interopRequireDefault(_serverconfig)
@@ -135,13 +137,13 @@ const waitResponse = async (page, url, duration) => {
 					startTimeout()
 				})
 				page.on('requestservedfromcache', () => {
-					startTimeout()
+					startTimeout(100)
 				})
 				page.on('requestfailed', () => {
-					startTimeout()
+					startTimeout(100)
 				})
 
-				setTimeout(resolveAfterPageLoadInFewSecond, 5000)
+				setTimeout(resolveAfterPageLoadInFewSecond, 10000)
 			})
 
 			resolve(result)
@@ -324,6 +326,23 @@ const ISRHandler = async ({ isFirstRequest, url }) => {
 
 	let result
 	if (_constants3.CACHEABLE_STATUS_CODE[status]) {
+		const optimizeHTMLContentPool = _workerpool2.default.pool(
+			__dirname + `/OptimizeHtml.worker.${_constants.resourceExtension}`,
+			{
+				minWorkers: 2,
+				maxWorkers: _constants3.MAX_WORKERS,
+			}
+		)
+
+		try {
+			html = await optimizeHTMLContentPool.exec('optimizeContent', [html, true])
+		} catch (err) {
+			_ConsoleHandler2.default.error(err)
+			return
+		} finally {
+			optimizeHTMLContentPool.terminate()
+		}
+
 		result = await cacheManager.set({
 			html,
 			url,

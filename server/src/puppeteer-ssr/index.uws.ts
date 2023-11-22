@@ -37,9 +37,7 @@ const puppeteerSSRService = (async () => {
 					else {
 						const startGenerating = Number(req.getQuery('startGenerating'))
 						const isFirstRequest = !!req.getQuery('isFirstRequest')
-						const url = req.getQuery('url')
-							? (decodeURIComponent(req.getQuery('url') as string) as string)
-							: ''
+						const url = req.getQuery('url') || ''
 
 						res.onAborted(() => {
 							Console.log('Request aborted')

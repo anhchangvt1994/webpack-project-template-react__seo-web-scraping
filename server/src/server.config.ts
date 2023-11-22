@@ -11,7 +11,7 @@ const ServerConfig = defineServerConfig({
 			},
 		},
 	},
-	crawler: 'http://localhost:9090',
+	crawler: 'http://localhost:3000',
 })
 
 export default ServerConfig

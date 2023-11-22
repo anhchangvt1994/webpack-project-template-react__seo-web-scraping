@@ -1,11 +1,13 @@
 import { Page } from 'puppeteer-core'
-import { ENV, userDataPath } from '../../constants'
+import WorkerPool from 'workerpool'
+import { ENV, resourceExtension, userDataPath } from '../../constants'
 import ServerConfig from '../../server.config'
 import Console from '../../utils/ConsoleHandler'
 import {
 	BANDWIDTH_LEVEL,
 	CACHEABLE_STATUS_CODE,
 	DURATION_TIMEOUT,
+	MAX_WORKERS,
 	POWER_LEVEL,
 	POWER_LEVEL_LIST,
 	regexNotFoundPageID,
@@ -111,13 +113,13 @@ const waitResponse = async (page: Page, url: string, duration: number) => {
 					startTimeout()
 				})
 				page.on('requestservedfromcache', () => {
-					startTimeout()
+					startTimeout(100)
 				})
 				page.on('requestfailed', () => {
-					startTimeout()
+					startTimeout(100)
 				})
 
-				setTimeout(resolveAfterPageLoadInFewSecond, 5000)
+				setTimeout(resolveAfterPageLoadInFewSecond, 10000)
 			})
 
 			resolve(result)
@@ -279,6 +281,23 @@ const ISRHandler = async ({ isFirstRequest, url }: IISRHandlerParam) => {
 
 	let result: ISSRResult
 	if (CACHEABLE_STATUS_CODE[status]) {
+		const optimizeHTMLContentPool = WorkerPool.pool(
+			__dirname + `/OptimizeHtml.worker.${resourceExtension}`,
+			{
+				minWorkers: 2,
+				maxWorkers: MAX_WORKERS,
+			}
+		)
+
+		try {
+			html = await optimizeHTMLContentPool.exec('optimizeContent', [html, true])
+		} catch (err) {
+			Console.error(err)
+			return
+		} finally {
+			optimizeHTMLContentPool.terminate()
+		}
+
 		result = await cacheManager.set({
 			html,
 			url,
