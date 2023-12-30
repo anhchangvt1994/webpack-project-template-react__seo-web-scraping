@@ -95,8 +95,11 @@ const get = async (url, options) => {
 			;(err) => {
 				if (err) {
 					_ConsoleHandler2.default.error(err)
-					_ConsoleHandler2.default.log(err)
-					return
+					return {
+						ttRenderMs: 200,
+						available: false,
+						isInit: true,
+					}
 				}
 			}
 		}
@@ -177,9 +180,9 @@ const set = async ({ html, url, isRaw = false }) => {
 		}
 	}
 
-	const result = await get(url, {
+	const result = (await get(url, {
 		autoCreateIfEmpty: false,
-	})
+	})) || { html, status: 200 }
 
 	return result
 } // set
