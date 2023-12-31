@@ -92,14 +92,12 @@ const get = async (url, options) => {
 				isRaw,
 			}
 		} catch (err) {
-			;(err) => {
-				if (err) {
-					_ConsoleHandler2.default.error(err)
-					return {
-						ttRenderMs: 200,
-						available: false,
-						isInit: true,
-					}
+			if (err) {
+				_ConsoleHandler2.default.error(err)
+				return {
+					ttRenderMs: 200,
+					available: false,
+					isInit: true,
 				}
 			}
 		}

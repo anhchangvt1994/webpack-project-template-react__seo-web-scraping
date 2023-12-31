@@ -65,15 +65,13 @@ const get = async (
 				isRaw,
 			}
 		} catch (err) {
-			;(err) => {
-				if (err) {
-					Console.error(err)
-					return {
-						ttRenderMs: 200,
-						available: false,
-						isInit: true,
-					} as ISSRResult
-				}
+			if (err) {
+				Console.error(err)
+				return {
+					ttRenderMs: 200,
+					available: false,
+					isInit: true,
+				} as ISSRResult
 			}
 		}
 	}
