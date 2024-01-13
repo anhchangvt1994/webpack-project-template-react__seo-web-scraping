@@ -207,6 +207,7 @@ module.exports = async (env, arg) => {
 						],
 						'store/ServerStore.ts': ['BotInfo', 'DeviceInfo', 'LocaleInfo'],
 						'utils/CookieHelper.ts': ['getCookie', 'setCookie'],
+						'components/Link.tsx': [['default', 'Link']],
 					},
 					{
 						'styled-components': [
