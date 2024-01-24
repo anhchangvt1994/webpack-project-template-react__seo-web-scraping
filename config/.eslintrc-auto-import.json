@@ -99,6 +99,7 @@
     "useUnsignedLetters": true,
     "LocaleInfo": true,
     "getLocale": true,
-    "useLocaleInfo": true
+    "useLocaleInfo": true,
+    "EnvironmentInfo": true
   }
 }
