@@ -211,7 +211,7 @@ module.exports = async (env, arg) => {
 							'DeviceInfo',
 							'LocaleInfo',
 						],
-						'utils/CookieHelper.ts': ['getCookie', 'setCookie'],
+						'utils/CookieHelper.ts': ['getCookie', 'setCookie', 'deleteCookie'],
 						'components/Link.tsx': [['default', 'Link']],
 					},
 					{
