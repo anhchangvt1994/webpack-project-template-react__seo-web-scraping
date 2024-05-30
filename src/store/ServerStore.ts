@@ -10,7 +10,7 @@ export interface IBotInfo {
 }
 
 export interface IDeviceInfo {
-	type: string
+	type: 'mobile' | 'tablet' | 'desktop'
 	isMobile: string | boolean
 	os: string
 }
@@ -100,7 +100,7 @@ export const ServerStore = (() => {
 				LocaleInfo = (() => {
 					const strInfo = getCookie('LocaleInfo')
 
-					const info = strInfo ? JSON.parse(strInfo) : {}
+					const info = strInfo ? JSON.parse(strInfo) : LocaleInfo || {}
 
 					return info
 				})()

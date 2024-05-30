@@ -38,10 +38,7 @@ export const enum SeoTagsEnum {
 	article_tag = 'article:tag',
 }
 
-export const INFO: {
-	curPath: string
-	resetSeoTagTimeout: null | NodeJS.Timeout
-} = {
+export const INFO = {
 	curPath: location.pathname,
 	resetSeoTagTimeout: null,
 }
@@ -52,10 +49,8 @@ const generateSeoTagWrapper = (params: IGenerateSeoTagWrapperParams) => {
 			clearTimeout(INFO.resetSeoTagTimeout)
 			INFO.resetSeoTagTimeout = null
 		}
-
 		if (INFO.curPath !== location.pathname) {
 			INFO.curPath = location.pathname
-
 			for (const key in SeoTags) {
 				SeoTags[key]()
 			}

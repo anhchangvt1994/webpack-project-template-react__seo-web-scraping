@@ -101,6 +101,11 @@
     "getLocale": true,
     "useLocaleInfo": true,
     "EnvironmentInfo": true,
-    "deleteCookie": true
+    "deleteCookie": true,
+    "ProxyAPI": true,
+    "decode": true,
+    "encode": true,
+    "getAPIStore": true,
+    "hashCode": true
   }
 }

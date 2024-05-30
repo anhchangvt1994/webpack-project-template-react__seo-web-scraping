@@ -167,6 +167,9 @@ module.exports = async (env, arg) => {
 							'generateTitleCase',
 							'generateSentenceCase',
 							'getLocale',
+							'encode',
+							'decode',
+							'hashCode',
 						],
 						'hooks/useStringHelper.ts': [
 							'useSlug',
@@ -211,6 +214,8 @@ module.exports = async (env, arg) => {
 							'DeviceInfo',
 							'LocaleInfo',
 						],
+						'store/APIStore.ts': ['getAPIStore'],
+						'utils/ProxyAPIHelper/index.ts': ['ProxyAPI'],
 						'utils/CookieHelper.ts': ['getCookie', 'setCookie', 'deleteCookie'],
 						'components/Link.tsx': [['default', 'Link']],
 					},

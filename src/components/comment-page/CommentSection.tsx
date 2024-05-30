@@ -7,6 +7,7 @@ const Section = styled.section`
 
 export default function CommentSection({ children }) {
 	const { id } = useRoute()
+
 	return (
 		<Section>
 			<LoadingBoundary

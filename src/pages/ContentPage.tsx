@@ -43,13 +43,13 @@ export default function ContentPage() {
 	const route = useRoute()
 	setSeoTag({
 		title: 'Trang nội dung',
-		keywords: 'trang chủ, vue 3, wsc-seo',
-		description: 'Trang nội dung Vue 3.x and WSC-SEO',
+		keywords: 'Trang nội dung, react, wsc-seo',
+		description: 'Trang nội dung React and WSC-SEO',
 		'og:type': 'website',
 		'og:title': 'Trang nội dung',
-		'og:description': 'Trang nội dung Vue 3.x and WSC-SEO',
+		'og:description': 'Trang nội dung React and WSC-SEO',
 		'og:url': window.location.pathname,
-		'og:site_name': 'Vue 3.x and WSC-SEO',
+		'og:site_name': 'React and WSC-SEO',
 		'og:image': '',
 		'og:image:width': '1200',
 		'og:image:height': '628',

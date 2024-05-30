@@ -9,8 +9,10 @@ config/env/.env
 config/env/env.json
 config/utils/PortHandler/.env
 *.DS_Store
+.cache
 server/**/server-info.json
 server/**/user_data*
 server/**/.cache
 server/**/utils/Cache.worker/pages/*
-.cache
+server/**/api/utils/CacheManager/data/*
+server/**/api/utils/CacheManager/store/*
