@@ -15,6 +15,10 @@ module.exports = async (env, arg) => {
 
 	if (!WebpackConfigWithMode) return
 
+	const { ENV_VARIABLE_EXPORTER_FOR_AUTO_IMPORT } = await import(
+		'./config/env/ENV_AUTO_IMPORT.mjs'
+	)
+
 	return {
 		mode: WebpackConfigWithMode.mode || arg.mode || 'production',
 		context: path.resolve(__dirname, '.'),
@@ -144,6 +148,18 @@ module.exports = async (env, arg) => {
 						],
 					},
 					{
+						from: 'react',
+						imports: [
+							'Dispatch',
+							'SetStateAction',
+							'HTMLProps',
+							'HTMLAttributes',
+							'ComponentType',
+							'ReactNode',
+						],
+						type: true,
+					},
+					{
 						'react-dom/client': ['createRoot'],
 					},
 					'react-router-dom',
@@ -218,16 +234,13 @@ module.exports = async (env, arg) => {
 						'utils/ProxyAPIHelper/index.ts': ['ProxyAPI'],
 						'utils/CookieHelper.ts': ['getCookie', 'setCookie', 'deleteCookie'],
 						'components/Link.tsx': [['default', 'Link']],
-					},
-					{
 						'styled-components': [
 							['default', 'styled'],
 							'createGlobalStyle',
 							'keyframes',
 						],
-					},
-					{
 						polished: ['rgba'],
+						...ENV_VARIABLE_EXPORTER_FOR_AUTO_IMPORT,
 					},
 				],
 				dts: PROJECT_PATH + '/config/auto-imports.d.ts',

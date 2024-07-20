@@ -15,10 +15,23 @@ declare global {
   const Navigate: typeof import('react-router-dom')['Navigate']
   const Outlet: typeof import('react-router-dom')['Outlet']
   const ProxyAPI: typeof import('utils/ProxyAPIHelper/index.ts')['ProxyAPI']
+  const ROUTER_BASE_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_BASE_PATH']
+  const ROUTER_COMMENT_ID: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_COMMENT_ID']
+  const ROUTER_COMMENT_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_COMMENT_PATH']
+  const ROUTER_CONTENT_COMMENT_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_CONTENT_COMMENT_PATH']
+  const ROUTER_CONTENT_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_CONTENT_PATH']
+  const ROUTER_HOME_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_HOME_PATH']
+  const ROUTER_LOGIN_ID: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_LOGIN_ID']
+  const ROUTER_LOGIN_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_LOGIN_PATH']
+  const ROUTER_NOT_FOUND_PATH: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['ROUTER_NOT_FOUND_PATH']
   const React: typeof import('react')
   const Route: typeof import('react-router-dom')['Route']
   const RouterProvider: typeof import('react-router-dom')['RouterProvider']
   const Routes: typeof import('react-router-dom')['Routes']
+  const STYLE_COLOR_BLUE: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['STYLE_COLOR_BLUE']
+  const STYLE_COLOR_DARK: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['STYLE_COLOR_DARK']
+  const STYLE_COLOR_WHITE: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['STYLE_COLOR_WHITE']
+  const STYLE_COLOR_YELLOW: typeof import('@/config/env/ENV_AUTO_IMPORT.mjs')['STYLE_COLOR_YELLOW']
   const StrictMode: typeof import('react')['StrictMode']
   const Suspense: typeof import('react')['Suspense']
   const componentDidCatch: typeof import('react')['componentDidCatch']
@@ -112,4 +125,10 @@ declare global {
   const useTitleCase: typeof import('hooks/useStringHelper.ts')['useTitleCase']
   const useTransition: typeof import('react')['useTransition']
   const useUnsignedLetters: typeof import('hooks/useStringHelper.ts')['useUnsignedLetters']
+}
+// for type re-export
+declare global {
+  // @ts-ignore
+  export type { Dispatch, SetStateAction, HTMLProps, HTMLAttributes, ComponentType, ReactNode } from 'react'
+  import('react')
 }
