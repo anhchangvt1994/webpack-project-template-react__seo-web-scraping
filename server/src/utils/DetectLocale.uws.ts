@@ -47,7 +47,16 @@ export default function detectLocale(req: HttpRequest): ILocaleInfo {
 		!geoip ||
 		!req
 	)
-		return LOCALE_INFO_DEFAULT
+		return {
+			...LOCALE_INFO_DEFAULT,
+			langSelected: ServerConfig.locale.enable
+				? LOCALE_INFO_DEFAULT.langSelected
+				: '',
+			countrySelected: ServerConfig.locale.enable
+				? LOCALE_INFO_DEFAULT.countrySelected
+				: '',
+		}
+
 	const { lookup } = geoip
 	const clientIp = (req.getHeader('x-forwarded-for') || '')
 		.toString()
@@ -106,12 +115,8 @@ export default function detectLocale(req: HttpRequest): ILocaleInfo {
 		})()
 	}
 
-	const defaultCountry = ServerConfig.locale.defaultCountry?.toUpperCase()
-	const defaultLang = ServerConfig.locale.defaultLang
-		? ServerConfig.locale.defaultLang
-		: !defaultCountry
-		? clientCountry
-		: undefined
+	const defaultCountry = LOCALE_INFO_DEFAULT.country.toUpperCase()
+	const defaultLang = LOCALE_INFO_DEFAULT.lang.toUpperCase()
 
 	const url = req.getUrl()
 	const pathSplitted = url.split('/')
