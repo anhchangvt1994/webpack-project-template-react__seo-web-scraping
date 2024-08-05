@@ -19,6 +19,27 @@ function _interopRequireWildcard(obj) {
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj }
 }
+function _optionalChain(ops) {
+	let lastAccessLHS = undefined
+	let value = ops[0]
+	let i = 1
+	while (i < ops.length) {
+		const op = ops[i]
+		const fn = ops[i + 1]
+		i += 2
+		if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) {
+			return undefined
+		}
+		if (op === 'access' || op === 'optionalAccess') {
+			lastAccessLHS = value
+			value = fn(value)
+		} else if (op === 'call' || op === 'optionalCall') {
+			value = fn((...args) => value.call(lastAccessLHS, ...args))
+			lastAccessLHS = undefined
+		}
+	}
+	return value
+}
 
 var _constants = require('../constants')
 var _serverconfig = require('../server.config')
@@ -129,8 +150,22 @@ function detectLocale(req) {
 		})()
 	}
 
-	const defaultCountry = LOCALE_INFO_DEFAULT.country.toUpperCase()
-	const defaultLang = LOCALE_INFO_DEFAULT.lang.toUpperCase()
+	const defaultCountry = _optionalChain([
+		_serverconfig2.default,
+		'access',
+		(_) => _.locale,
+		'access',
+		(_2) => _2.defaultCountry,
+		'optionalAccess',
+		(_3) => _3.toUpperCase,
+		'call',
+		(_4) => _4(),
+	])
+	const defaultLang = _serverconfig2.default.locale.defaultLang
+		? _serverconfig2.default.locale.defaultLang
+		: !defaultCountry
+		? clientCountry
+		: undefined
 
 	const url = req.getUrl()
 	const pathSplitted = url.split('/')

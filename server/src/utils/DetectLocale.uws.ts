@@ -115,8 +115,12 @@ export default function detectLocale(req: HttpRequest): ILocaleInfo {
 		})()
 	}
 
-	const defaultCountry = LOCALE_INFO_DEFAULT.country.toUpperCase()
-	const defaultLang = LOCALE_INFO_DEFAULT.lang.toUpperCase()
+	const defaultCountry = ServerConfig.locale.defaultCountry?.toUpperCase()
+	const defaultLang = ServerConfig.locale.defaultLang
+		? ServerConfig.locale.defaultLang
+		: !defaultCountry
+		? clientCountry
+		: undefined
 
 	const url = req.getUrl()
 	const pathSplitted = url.split('/')
